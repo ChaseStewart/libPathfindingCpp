@@ -24,8 +24,10 @@ const int points_per_circle = 16; ///< configurable number of points around circ
 const double line_buffer_distance = 0.1; ///< configurable relatively small "stroke-width" to turn lines to polygons
 const float min_keepout_buffer = 0.05; ///< scalar for get_obstacle_buffer_size()
 
-// static variable, ensures n-many wraps around obstacles don't take same path
-// each subsequent call to get_obstacle_avoid_path will have additional keepout
+/**
+ *  static variable, ensures n-many wraps around obstacles don't take same path
+ *  each subsequent call to get_obstacle_avoid_path will have additional keepout
+ */
 static int buffer_offset = 1; ///< incrementing value to increase subsequent keepout around obstacles
 
 /* Resolving paths */
@@ -175,43 +177,53 @@ static Line get_obstacle_avoid_path(Line straight_path, vector<obstacle> &obstac
    Line retval;
    MultiPolygon all_obstacles;
 
-   // stroke linestring (series of points) into thin polygon
+   /* stroke Line (series of points) into thin polygon */
    MultiPolygon line_buf;
    bg::buffer(straight_path, line_buf, distance_strategy, side_strategy, join_strategy, end_strategy, circle_strategy);
 
-   // iteratively create a polygon union of all obstacles intersecting with the straight line path
-   // we expect to have at least one, or else we would have used pathfinding()'s straight_path
+   /**
+    * iteratively create a polygon union of all obstacles intersecting with the straight line path
+    * we expect to have at least one, or else we would have used pathfinding()'s straight_path
+    */
    vector<obstacle> intersecting = get_intersecting_obstacles(straight_path, obstacles);
    for (auto shape : intersecting)
    {
-      // create an ever-slightly-wider circle (see get_obstacle_buffer_size)
-      // and stick it to our thin line_buf polygon
+      /**
+       * create an ever-slightly-wider circle (see get_obstacle_buffer_size)
+       * and stick it to our thin line_buf polygon
+       */
       MultiPolygon circle = circle_from_obstacle(shape, get_obstacle_buffer_size());
       bg::union_(line_buf, circle[0], all_obstacles);
    }
-   // our most crucial trick, generate a convex hull line around the compound polygon
+   /* our most crucial trick, generate a convex hull line around the compound polygon */
    Line hull;
    bg::convex_hull(all_obstacles, hull);
 
-   // now the rest of the algorithm is going to be about effectively 
-   // selecting a subset of the convex hull and making sure it exactly reaches our points
+   /**
+    * now the rest of the algorithm is going to be about effectively
+    * selecting a subset of the convex hull and making sure it exactly reaches our points
+    */
 
-   // load the proper subset of the convex hull into the final path
+   /* load the proper subset of the convex hull into the final path */
    Line convex_hull_subset = find_convex_hull_subset(straight_path[0], straight_path[1], hull, is_clockwise);
 
-   // with infinite time I'd like to figure out why I have so much trouble with order of these points- but this works
-   // in a nutshell- if it appears clear we hop from the first point to the far end of the convex hull and vice versa,
-   // and thus this path crosses itself, just reverse it 
+   /**
+    * with infinite time I'd like to figure out why I have so much trouble with order of these points- but this works
+    * in a nutshell- if it appears clear we hop from the first point to the far end of the convex hull and vice versa,
+    * and thus this path crosses itself, just reverse it
+    */
    if (bg::distance(convex_hull_subset[0], straight_path[0]) > bg::distance(convex_hull_subset[convex_hull_subset.size() - 1], straight_path[0]))
    {
       bg::reverse(convex_hull_subset);
    }
 
-   // load the first point into the final path
+   /* load the first point into the final path */
    retval.push_back(straight_path[0]);
 
-   // because we're making a convex hull around a stroked path, there are some annoying small points around the buffer near each endpoint
-   // we have this keepout to filter out those noisy parts and just take the path around the obstacle(s)
+   /**
+    * because we're making a convex hull around a stroked path, there are some annoying small points around the buffer near each endpoint
+    * we have this keepout to filter out those noisy parts and just take the path around the obstacle(s)
+    */
    for (auto point : convex_hull_subset)
    {
       // we want points that are just a little bit beyond the "stroke width" value we used to turn the line into a polygon
@@ -228,7 +240,7 @@ static Line get_obstacle_avoid_path(Line straight_path, vector<obstacle> &obstac
       }
    }
 
-   // load the last point into the final path after the first and the hull
+   /* load the last point into the final path after the first and the hull */
    retval.push_back(straight_path[1]);
    return retval;
 }
@@ -240,7 +252,7 @@ static Line get_obstacle_avoid_path(Line straight_path, vector<obstacle> &obstac
  * @param target the Point of the final target, second and final point in straight_path
  * @param convex_hull a closed-shape convex hull that goes around but doesn't touch agent/target
  * @param is_clockwise true to reverse convex_hull before iterating
- * @return linestring with the relevant portion of provided convex_hull for pathfinding
+ * @return Line with the relevant portion of provided convex_hull for pathfinding
  */
 static Line find_convex_hull_subset(Point agent, Point target, Line convex_hull, bool is_clockwise)
 {
@@ -252,14 +264,16 @@ static Line find_convex_hull_subset(Point agent, Point target, Line convex_hull,
    size_t end_idx;
    Line result;
 
-   // this handles clockwise/counterclockwise iteration
+   /* handle clockwise/counterclockwise by optionally reversing vector of points */
    if (!is_clockwise)
    {
       bg::reverse(convex_hull);
    }
 
-   // iterate around whole closed shape, checking each points distances
-   // to agent and to target, keep a running tally of closest point to each
+   /**
+    * iterate around whole closed shape, checking each points distances
+    * to agent and to target, keep a running tally of closest point to each
+    */
    for (auto it = convex_hull.begin(); it != convex_hull.end(); ++it)
    {
       start_distance = bg::distance(*it, agent);
@@ -275,8 +289,10 @@ static Line find_convex_hull_subset(Point agent, Point target, Line convex_hull,
          end_idx = std::distance(convex_hull.begin(), it);
       }
    }
-   // now that we have closest points, return subset of closed shape from min(start,end) to max(start,end) 
-   // TODO this is suboptimal and it should be possible to reason out this min/max/ reverse issue
+   /**
+    *  now that we have closest points, return subset of closed shape from min(start,end) to max(start,end)
+    *  TODO this is suboptimal and it should be possible to reason out this min/max/ reverse issue
+    */
    result.assign(convex_hull.begin() + min(start_idx, end_idx), convex_hull.begin() + max(start_idx, end_idx));
    return result;
 }
@@ -300,18 +316,20 @@ static double get_obstacle_buffer_size(void)
  */
 static MultiPolygon circle_from_obstacle(obstacle o, double extra_buffer = 0)
 {
-   const int points_per_circle = 16; ///< configurable num points around circle
+   const int points_per_circle = 16; // configurable num points around circle
 
-   // We use the concept of a buffer around a point to create our circle
-   // these strategies are effectively options about how we will generate our circle
+   /**
+    * We use the concept of a buffer around a point to create our circle
+    * boost::geometry strategies are effectively options about how we will generate our circle
+    */
    bg::strategy::buffer::join_round join_strategy(points_per_circle); // unused for obstacles
    bg::strategy::buffer::end_round end_strategy(points_per_circle); // unused for obstacles
    bg::strategy::buffer::side_straight side_strategy; // unused for obstacles
 
-   // make a circle with 16 points around a single point
+   /* make a circle with 16 points around a single point */
    bg::strategy::buffer::point_circle circle_strategy(points_per_circle);
 
-   // set buffer distance (obstacle radius + extra buffer)
+   /* set buffer distance (obstacle radius + extra buffer) */
    bg::strategy::buffer::distance_symmetric<double> distance_strategy(o.radius + extra_buffer);
 
    MultiPolygon result;
@@ -320,8 +338,7 @@ static MultiPolygon circle_from_obstacle(obstacle o, double extra_buffer = 0)
 }
 
 /**
- * @brief validate the input agents and targets. If this fails pathfinding cannot proceed
- * as it is based on an invalid premise
+ * @brief validate the input agents and targets. If this fails, pathfinding cannot proceed
  * @param bounds Outer boundary box
  * @param agents vector of all agents
  * @param targets vector of all targets
@@ -330,14 +347,14 @@ static MultiPolygon circle_from_obstacle(obstacle o, double extra_buffer = 0)
  */
 bool is_valid_input_params(Boundary &bounds, vector<Point> &agents, vector<Point> &targets, vector<obstacle> &obstacles)
 {
-   // ensure we don't exceed max number of agents
+   /* ensure we don't exceed max number of agents */
    if (agents.size() > NUM_MAX_AGENTS)
    {
       cerr << "ERROR: Provided number of agents exceeds max value:" << NUM_MAX_AGENTS << endl;
       return false;
    }
 
-   // check agent validity
+   /* check agent validity */
    for (auto agent : agents)
    {
       // ensure all agents are inbounds
@@ -358,7 +375,7 @@ bool is_valid_input_params(Boundary &bounds, vector<Point> &agents, vector<Point
       }
    }
 
-   // check target validity
+   /* check target validity */
    for (auto target : targets)
    {
       // ensure all targets are inbounds
@@ -379,7 +396,7 @@ bool is_valid_input_params(Boundary &bounds, vector<Point> &agents, vector<Point
       }
    }
 
-   // ensure no obstacles contain the box
+   /* ensure no obstacles contain the box */
    for (auto obs : obstacles)
    {
       MultiPolygon circle = circle_from_obstacle(obs);
@@ -390,7 +407,7 @@ bool is_valid_input_params(Boundary &bounds, vector<Point> &agents, vector<Point
       }
    }
 
-   // ensure no obstacles bifurcate the box
+   /* ensure no obstacles bifurcate the box */
    for (auto obs : obstacles)
    {
       MultiPolygon mp;
@@ -421,23 +438,24 @@ static void swap_agents(vector<pathfind_result> &pr, int idx_1, int idx_2)
 }
 
 /**
- * @brief after having swapped agents, this function calculates a path from new agent to target
- * This is akin to the part of the pathfinding algorithm where an agent accepts a bid
- * except this bid is always immediately accepted and applied
+ * @brief Calculate a path from agent to target, this is sort of a state machine
+ * that selects straight or curved path, and then orchestrates curved path design if necessary
  * @param bounds outer bounding Box
  * @param agent agent that must route to target
  * @param target target to be routed to
  * @param obstacles vector of circular obstacles to avoid
- * @return a new straight or curved path from agent to target as if this bid was accepted
+ * @return a new straight or curved path from agent to target
  */
 static Line calculate_path(Boundary &bounds, Point agent, Point target, vector<obstacle> &obstacles)
 {
-   // check how many obstacles are intersecting
+   /* check how many obstacles are intersecting */
    Line straight_path = {Point(agent.x(), agent.y()), Point(target.x(), target.y())};
    vector<obstacle> intersecting = get_intersecting_obstacles(straight_path, obstacles);
 
-   // This is the easy case, a straight line to the target will always be the
-   // best bid for a particular agent if it is avaialable
+   /**
+    * Easy case: a straight line to the target will always be the
+    * best bid for a particular agent if it is avaialable
+    */
    if (intersecting.empty() &&
        is_path_in_bounds(straight_path, bounds))
    {
@@ -445,14 +463,20 @@ static Line calculate_path(Boundary &bounds, Point agent, Point target, vector<o
       // return the straight path
       return straight_path;
    }
-   // This is the hard case, need curved object-avoiding path
+   /**
+    * Hard case: if even one obstacle intersects the path, 
+    * curved object-avoiding path is needed
+    */
    else if (!intersecting.empty())
    {
       cout << "\t\t\tpath will be convex hull" << endl;
+      /* Attempt clockwise object-avoiding path */
       Line curved_path = get_obstacle_avoid_path(straight_path, obstacles, true);
+      // confession- after messing with this, I am not certain clockwise_arg is truly clockwise
       if (!is_path_in_bounds(curved_path, bounds))
       {
          cout << "\t\t\t\tWARNING: clockwise path is OOB - trying counterclockwise" << endl;
+         /* first try was out of bounds, reverse path and try again  */
          curved_path = get_obstacle_avoid_path(straight_path, obstacles, false);
          if (!is_path_in_bounds(curved_path, bounds))
          {
@@ -470,10 +494,10 @@ static Line calculate_path(Boundary &bounds, Point agent, Point target, vector<o
 }
 
 /**
- * @brief test whether two {agent, target} pairings intersect
- * @param p1 one pairing of {agent, target}
- * @param p2 another pairing of {agent, target}
- * @return true if p1 and p2 intersect, else false
+ * @brief test whether two paths intersect
+ * @param p1 one pathfinding_result, from which path will be obtained
+ * @param p2 another pathfinding_result, from which path will be obtained
+ * @return true if p1.path and p2.path intersect, else false
  */
 static bool is_path_crossing(pathfind_result p1, pathfind_result p2)
 {
@@ -511,9 +535,8 @@ static bool is_point_in_bounds(Point p, Boundary bounds)
 }
 
 /**
- * @brief Test whether an {agent, target} pairing crosses an obstacle
- * @param target target under test, a straight line {target,agent} will be constructed
- * @param agent agent under test, a straight line {target,agent} will be constructed
+ * @brief Test whether a provided path crosses one or more obstacles
+ * @param path Line from target to agent to check for obstacles
  * @param obstacles A vector of circular obstacles
  * @return vector of intersecting obstacles, empty if no intersection
  */
@@ -540,9 +563,11 @@ static vector<obstacle> get_intersecting_obstacles(Line path, vector<obstacle> o
 
 void print_result(Boundary &bounds, vector<obstacle> &obstacles, vector<pathfind_result> &results)
 {
-   // python rendering script is designed to ignore blank lines and lines that begin with tab
-   // so that output from this library can be read for diagnostic information or simply piped to a CSV
-   // for rendering with the python script
+   /**
+    * The associated python rendering script render_result.py is designed to ignore blank lines 
+    * and lines that begin with tab so that output from this library can be read 
+    * for diagnostic information or simply piped to a .csv to render with the python script
+    */
 
    // print CSV Header
    cout << endl;

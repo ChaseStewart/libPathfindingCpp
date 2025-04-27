@@ -87,6 +87,14 @@ The high level algorithm is as follows:
 9. repeat steps 6 - 8 until we get through combinations without an intersection- if this goes indefinitely, eventually algorithm will raise exception
 10. return list of paths
 
+### Challenges
+There were definitely a few challenges here:
+* First approach was going to be to take a straight path, then an intersection of a buffer around the circle so like a beeline, then half-circle, then beeline again. However the boost::geometry tools would have made this quite challenging, as I would need to perhaps pull in boost::polygon or get deep into polygon outer-rings and directions and manually sew polygons
+* I was attempting to make the clockwise/counterclockwise traversal of the convex hull way too hard at first for reasons that are now hard to explain
+* There was some challenge working with polygons and multi-polygons in the convex hull algorithm, turned out boost::geometry was very intuitive and let me index multi-polygons like vectors
+* Some time was wasted with the uncrossing for-loop counting down from final\_results.size()-1 -> 0 as I made the var an unsigned size\_t and was counting while > 0, just one of those silly mistakes. GDB helped me see what I was doing.
+* Before I set some constant values out to the top of pathfinding.cpp, I had some trouble tuning those values for TEST\_4 which I made extremely hard on myself. This was probably good in the long term, but I spent a lot of time getting that working
+
 ## Test Results
 ### Test\_1 Results
 Input data
