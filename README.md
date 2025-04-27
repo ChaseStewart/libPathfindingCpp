@@ -9,7 +9,7 @@ See [Test Results](#test-results) to get a sense of what this does.
 Chase E. Stewart
 
 ## Structure
-library libpathfinding/ is a shared library that provides a wrapper over boost::geometry
+library libpathfinding/ is a shared library that provides a wrapper over [boost::geometry](https://www.boost.org/doc/libs/1_85_0/libs/geometry/doc/html/index.html)
 so as to provide a desired algorithm for multi-quadcopter pathfinding.
 
 The layout of this repository is as follows:
