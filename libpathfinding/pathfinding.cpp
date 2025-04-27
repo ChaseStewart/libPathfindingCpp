@@ -32,7 +32,7 @@ static int buffer_offset = 1; ///< incrementing value to increase subsequent kee
 static void swap_agents(vector<pathfind_result> &pr, int idx_1, int idx_2);
 static Line get_obstacle_avoid_path(Line straight_path, vector<obstacle> &obstacles, bool is_clockwise);
 static Line find_convex_hull_subset(Point agent, Point target, Line convex_hull, bool is_clockwise);
-static Line recalculate_path(Boundary &bounds, Point agent, Point target, vector<obstacle> &obstacles);
+static Line calculate_path(Boundary &bounds, Point agent, Point target, vector<obstacle> &obstacles);
 
 /* boundary checking */
 static vector<obstacle> get_intersecting_obstacles(Line straight_path, vector<obstacle> obstacles);
@@ -81,41 +81,10 @@ vector<pathfind_result> pathfind(Boundary &bounds, vector<Point> &agents, vector
       {
          size_t agent_id = std::distance(agents.begin(), it);
 
-         // check how many obstacles are intersecting
-         Line straight_path = {Point(it->x(), it->y()), Point(target.x(), target.y())};
-         vector<obstacle> intersecting = get_intersecting_obstacles(straight_path, obstacles);
-
-         // this is the easy case, a straight line to the target will always be the
-         // best bid for a particular agent if it is avaialable
-         if (intersecting.empty() &&
-             is_path_in_bounds(straight_path, bounds))
-         {
-            cout << "\t\tAgent_" << agent_id << " bids straight line to target" << endl;
-            agent_bids bid = {std::distance(agents.begin(), it), *it, straight_path, bg::length(straight_path)};
-            bids.push_back(bid);
-         }
-         // this is the hard case, need curved object-avoiding path via convex_hull
-         else if (!intersecting.empty())
-         {
-            cout << "\t\tAgent_" << agent_id << " bids convex hull to target" << endl;
-            Line curved_path = get_obstacle_avoid_path(straight_path, obstacles, true);
-            if (!is_path_in_bounds(curved_path, bounds))
-            {
-               cout << "\t\t\tERROR: Agent_" << agent_id << " clockwise path is OOB - trying counterclockwise" << endl;
-               curved_path = get_obstacle_avoid_path(straight_path, obstacles, false);
-               if (!is_path_in_bounds(curved_path, bounds))
-               {
-                  throw runtime_error("Agent reports no way around obstacle");
-               }
-            }
-            agent_bids bid = {agent_id, *it, curved_path, bg::length(curved_path)};
-            bids.push_back(bid);
-         }
-         // Should not be possible
-         else
-         {
-            throw runtime_error("Agent or target is out of bounds, initial checks insufficient");
-         }
+         // construct a bid for this agent and append to vector of bids
+         Line chosen_path = calculate_path(bounds, *it, target, obstacles);
+         agent_bids bid = {agent_id, *it, chosen_path, bg::length(chosen_path)};
+         bids.push_back(bid);
       }
 
       // setup pathfinding result
@@ -177,8 +146,8 @@ vector<pathfind_result> pathfind(Boundary &bounds, vector<Point> &agents, vector
                   is_crossing = true;
                   cout << "\t\tERROR: Paths [" << i << "," << j << "] are crossing - resolving" << endl;
                   swap_agents(final_results, i, j);
-                  final_results.at(i).path = recalculate_path(bounds, final_results.at(i).agent, final_results.at(i).target, obstacles);
-                  final_results.at(j).path = recalculate_path(bounds, final_results.at(j).agent, final_results.at(j).target, obstacles);
+                  final_results.at(i).path = calculate_path(bounds, final_results.at(i).agent, final_results.at(i).target, obstacles);
+                  final_results.at(j).path = calculate_path(bounds, final_results.at(j).agent, final_results.at(j).target, obstacles);
                }
             }
          }
@@ -324,23 +293,28 @@ static double get_obstacle_buffer_size(void)
 }
 
 /**
- * @brief Turn an obstacle into a circle
+ * @brief Turn an obstacle into a circular MultiPolygon
  * @param o obstacle to become a circle
- * @return MultiPolygon circle
+ * @param extra_buffer optionally increase buffer around obstacle. See get_obstacle_buffer_size()
+ * @return MultiPolygon circular polygon made of 16 evenly spaced points around o.p
  */
 static MultiPolygon circle_from_obstacle(obstacle o, double extra_buffer = 0)
 {
-   const int points_per_circle = 16; // configurable magic number
+   const int points_per_circle = 16; ///< configurable num points around circle
 
    // We use the concept of a buffer around a point to create our circle
    // these strategies are effectively options about how we will generate our circle
-   bg::strategy::buffer::join_round join_strategy(points_per_circle);
-   bg::strategy::buffer::end_round end_strategy(points_per_circle);
+   bg::strategy::buffer::join_round join_strategy(points_per_circle); // unused for obstacles
+   bg::strategy::buffer::end_round end_strategy(points_per_circle); // unused for obstacles
+   bg::strategy::buffer::side_straight side_strategy; // unused for obstacles
+
+   // make a circle with 16 points around a single point
    bg::strategy::buffer::point_circle circle_strategy(points_per_circle);
-   bg::strategy::buffer::side_straight side_strategy;
-   MultiPolygon result;
+
+   // set buffer distance (obstacle radius + extra buffer)
    bg::strategy::buffer::distance_symmetric<double> distance_strategy(o.radius + extra_buffer);
 
+   MultiPolygon result;
    bg::buffer(o.p, result, distance_strategy, side_strategy, join_strategy, end_strategy, circle_strategy);
    return result;
 }
@@ -356,20 +330,23 @@ static MultiPolygon circle_from_obstacle(obstacle o, double extra_buffer = 0)
  */
 bool is_valid_input_params(Boundary &bounds, vector<Point> &agents, vector<Point> &targets, vector<obstacle> &obstacles)
 {
+   // ensure we don't exceed max number of agents
    if (agents.size() > NUM_MAX_AGENTS)
    {
       cerr << "ERROR: Provided number of agents exceeds max value:" << NUM_MAX_AGENTS << endl;
       return false;
    }
 
-   // ensure all agents are inbounds
+   // check agent validity
    for (auto agent : agents)
    {
+      // ensure all agents are inbounds
       if (!is_point_in_bounds(agent, bounds))
       {
          cerr << "ERROR: Agent located outside boundary" << endl;
          return false;
       }
+      // ensure no agents are within obstacles
       for (auto obs : obstacles)
       {
          MultiPolygon circle = circle_from_obstacle(obs);
@@ -381,14 +358,16 @@ bool is_valid_input_params(Boundary &bounds, vector<Point> &agents, vector<Point
       }
    }
 
-   // ensure all targets are inbounds
+   // check target validity
    for (auto target : targets)
    {
+      // ensure all targets are inbounds
       if (!is_point_in_bounds(target, bounds))
       {
          cerr << "ERROR: Target located outside boundary" << endl;
          return false;
       }
+      // ensure no targets are within obstacles
       for (auto obs : obstacles)
       {
          MultiPolygon circle = circle_from_obstacle(obs);
@@ -441,40 +420,52 @@ static void swap_agents(vector<pathfind_result> &pr, int idx_1, int idx_2)
    pr.at(idx_2).agent = temp_agent;
 }
 
-static Line recalculate_path(Boundary &bounds, Point agent, Point target, vector<obstacle> &obstacles)
+/**
+ * @brief after having swapped agents, this function calculates a path from new agent to target
+ * This is akin to the part of the pathfinding algorithm where an agent accepts a bid
+ * except this bid is always immediately accepted and applied
+ * @param bounds outer bounding Box
+ * @param agent agent that must route to target
+ * @param target target to be routed to
+ * @param obstacles vector of circular obstacles to avoid
+ * @return a new straight or curved path from agent to target as if this bid was accepted
+ */
+static Line calculate_path(Boundary &bounds, Point agent, Point target, vector<obstacle> &obstacles)
 {
    // check how many obstacles are intersecting
    Line straight_path = {Point(agent.x(), agent.y()), Point(target.x(), target.y())};
    vector<obstacle> intersecting = get_intersecting_obstacles(straight_path, obstacles);
 
-   // this is the easy case, a straight line to the target will always be the
+   // This is the easy case, a straight line to the target will always be the
    // best bid for a particular agent if it is avaialable
    if (intersecting.empty() &&
        is_path_in_bounds(straight_path, bounds))
    {
-      cout << "\t\t\tRecalculated path will be straight line" << endl;
+      cout << "\t\t\tpath will be straight line" << endl;
+      // return the straight path
       return straight_path;
    }
-   // hard case, need curved object-avoiding path
+   // This is the hard case, need curved object-avoiding path
    else if (!intersecting.empty())
    {
-      cout << "\t\t\tRecalculated path will be convex hull" << endl;
+      cout << "\t\t\tpath will be convex hull" << endl;
       Line curved_path = get_obstacle_avoid_path(straight_path, obstacles, true);
       if (!is_path_in_bounds(curved_path, bounds))
       {
-         cout << "\t\t\t\tERROR: Recalculated clockwise path is OOB - trying counterclockwise" << endl;
+         cout << "\t\t\t\tWARNING: clockwise path is OOB - trying counterclockwise" << endl;
          curved_path = get_obstacle_avoid_path(straight_path, obstacles, false);
          if (!is_path_in_bounds(curved_path, bounds))
          {
-            throw runtime_error("Recalculated path: Agent reports no way around obstacle");
+            throw runtime_error("ERROR: Agent reports no way around obstacle");
          }
       }
+      // return the curved path
       return curved_path;
    }
    else
    {
       // should not be possible
-      throw runtime_error("Recalculated path: Agent or target is out of bounds, initial checks insufficient");
+      throw runtime_error("ERROR: Agent or target is out of bounds, initial checks insufficient");
    }
 }
 
