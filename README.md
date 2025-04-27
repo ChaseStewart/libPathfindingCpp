@@ -1,5 +1,5 @@
 # libPathfindingCpp
-A C++ path planner providing an algorithm to assign agents to targets
+A C++ path planner providing an algorithm to assign agents to targets.
 See [Test Results](#test-results) to get a sense of what this does
 
 ## Author
