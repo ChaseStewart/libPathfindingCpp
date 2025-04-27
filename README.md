@@ -1,5 +1,6 @@
 # libPathfindingCpp
 A C++ path planner providing an algorithm to assign agents to targets
+See [Test Results](#test-results) to get a sense of what this does
 
 ## Author
 Chase E. Stewart
@@ -81,12 +82,71 @@ The high level algorithm is this
 9. repeat steps 6 - 8 until we get through combinations without an intersection- if this goes indefinitely, eventually algorithm will raise exception
 10. return list of paths
 
-
+## Test Results
 ### Test\_1 Results
+Input data
+```c++
+    // simple test with shortest path sanity checking
+    // and a single simple convex hull case
+    obstacles.push_back({Point(5.0, 5.0), 2.0});
+    obstacles.push_back({Point(2.0, 2.0), 0.5});
+
+    targets.push_back({Point(8.0, 9.0)});
+    targets.push_back({Point(7.0, 9.0)});
+    targets.push_back({Point(2.0, 1.0)});
+    targets.push_back({Point(5.0, 2.0)});
+
+    agents.push_back({Point(4.0, 7.0)});
+    agents.push_back({Point(2.0, 9.0)});
+    agents.push_back({Point(2.0, 3.0)});
+    agents.push_back({Point(8.0, 2.0)});
+```
 ![Screenshot](/results/Test1_output.png)
 ### Test\_2 Results
+Input data
+```c++
+    // the "peapod" test, convex hull around
+    // two obstacles in both directions
+    obstacles.push_back({Point(3.0, 3.0), 1.0});
+    obstacles.push_back({Point(6.5, 6.5), 1.0});
+
+    targets.push_back({Point(9.5, 9.5)});
+    targets.push_back({Point(9.8, 9.8)});
+
+    agents.push_back({Point(1.2, 1.0)});
+    agents.push_back({Point(0.1, 0.1)});
+```
 ![Screenshot](/results/Test2_output.png)
 ### Test\_3 Results
+Input data
+```c++
+    // force one cross then another
+    // and undo them both sequentially
+    obstacles.push_back({Point(5, 5), 1.0});
+
+    targets.push_back({Point(6.0, 4.0)});
+    targets.push_back({Point(0.1, 9.5)});
+    targets.push_back({Point(9.8, 9.8)});
+    targets.push_back({Point(9.9, 0.1)});
+
+    agents.push_back({Point(1.2, 1.0)});
+    agents.push_back({Point(9.7, 0.1)});
+    agents.push_back({Point(0.2, 9.9)});
+    agents.push_back({Point(4.0, 6.0)});
+```
 ![Screenshot](/results/Test3_output.png)
 ### Test\_4 Results
+Input data
+```c++
+    // undo an X wrapped around a convex hull
+    obstacles.push_back({Point(3, 7), 2.99});
+
+    targets.push_back({Point(9.9, 9.9)});
+    targets.push_back({Point(9.8, 9.7)});
+    targets.push_back({Point(5.5, 9.5)});
+
+    agents.push_back({Point(0.2, 1.0)});
+    agents.push_back({Point(2.5, 0.5)});
+    agents.push_back({Point(1.0, 4.0)});
+```
 ![Screenshot](/results/Test4_output.png)
