@@ -5,7 +5,7 @@ See [Test Results](#test-results) to get a sense of what this does
 ## Author
 Chase E. Stewart
 
-## Usage
+## Structure
 library libpathfinding/ is a shared library that provides a wrapper over boost::geometry
 so as to provide a desired algorithm for multi-quadcopter pathfinding.
 
@@ -14,7 +14,8 @@ _libpathfinding/:_ a directory holding the shared library for the path algorithm
 _main.c:_ an example function pre-loaded with some tests that exercises libpathfinding
 _render_results.py:_ a python program that renders outputs of libpathfinding's print\_result() via matplotlib
 
-## Pre-Installation
+## Setup
+### Pre-Installation
 From an absolutely unmodified version of WSL Ubuntu-24.04
 
 * First, clone this repository
@@ -33,7 +34,7 @@ sudo apt-get install python3-numpy
 ```
 Now you will be ready to compile and run the program
 
-## Installation and Running
+### Installation and Running
 Follow these steps to exercise the library example
 
 * From `libPathfindingCpp/`, call `make`
@@ -42,14 +43,15 @@ Follow these steps to exercise the library example
 * run `./render_results.py` **NOTE: your terminal must be capable of popping up windows- my WSL from Windows 11 can do this**
   + in case you have trouble with this, I have provided captures of the test results. These should be deterministic
 
-## Design Goals
+## Design
+### Goals
 As far as the high level design of this project- I wanted to accomplish a few things:
 * Try to use idiomatic, maintainable, and extensible methods as much as possible
 * Separate aspects of algorithm from usage from the start and provide a sensible interface
 * Show my own reasoning- for example don't use vibe coding to jam the prompt into a format for A* search and call it a day
 * Try to show some algorithmic thinking, including anticipating and resolving corner cases
 
-## Design Philosophy
+### Philosophy
 So then, I thought about this problem and broke it down like this:
 * There will only ever be 4 quadcopters, so algorithmic complexity is not quite punishing here
    + Where there are trade-offs, we want to optimize for correctness
@@ -69,8 +71,8 @@ So then, I thought about this problem and broke it down like this:
    + if the crossed paths cannot be resolved, this backoff will eventually lead to the algorithm failing with an exception
    + This should only (rightly) trigger in devilishly complex scenarios where I can't even talk through a fix with the picture in front of me
 
-## Algorithm
-The high level algorithm is this
+### High Level Algorithm
+The high level algorithm is as follows:
 1. validate all inputs, exit with error if any invalid case such as obstacle fully covers boundary or more than 4 agents
 2. Iterate over each target in order added, each available agent bids a path and distance
 3. For their bids, agents prefer straight line paths if acceptable, or else generate curved line paths (described below) as necessary
