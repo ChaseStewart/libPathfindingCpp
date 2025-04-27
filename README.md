@@ -12,12 +12,13 @@ Chase E. Stewart
 library libpathfinding/ is a shared library that provides a wrapper over [boost::geometry](https://www.boost.org/doc/libs/1_85_0/libs/geometry/doc/html/index.html)
 so as to provide a desired algorithm for multi-quadcopter pathfinding.
 
-The layout of this repository is as follows:
-* _libpathfinding/:_ a directory holding the shared library for the path algorithm
-* _main.cpp:_ an example function pre-loaded with some tests for `libpathfinding/` described in [Test Results](#test-results)
-* _render_results.py:_ a python program that renders outputs of libpathfinding's `print\_result()` via matplotlib
-* _results/:_ a folder with .png images of the library working on main.cpp's tests
+Directories and files of note in this repository:
+* _documentation/:_ a directory holding the Doxyfile for generating Doxygen documentation
 * _extra/:_ folder with DroneStatus.msg
+* _libpathfinding/:_ a directory holding the shared library for the path algorithm
+* _results/:_ a folder with .png images of the library working on main.cpp's tests
+* _main.cpp:_ an example function pre-loaded with some tests for `libpathfinding/` described in [Test Results](#test-results)
+* _render_results.py:_ a Python3 script that renders outputs of libpathfinding's `print\_result()` via matplotlib. **It requires input filename be `results.csv`**
 
 ## Setup
 ### Pre-Installation
@@ -44,9 +45,9 @@ Follow these steps to exercise the library example
 
 * From `libPathfindingCpp/`, call `make`
 * [Optional] Run `./main` and observe outputs
-* Run `./main > results.csv`
+* Run `./main > results.csv` **NOTE: you must name output file `results.csv` for simplicity**
 * run `./render_results.py` **NOTE: your terminal must be capable of popping up windows- my WSL from Windows 11 can do this**
-  + in case you have trouble with this, I have provided captures of the test results. These should be deterministic
+  + in case you have trouble with this, I have provided captures of the test results. Results should be deterministic.
 
 ## Design
 ### Goals
