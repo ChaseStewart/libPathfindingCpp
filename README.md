@@ -1,2 +1,83 @@
 # libPathfindingCpp
-A C++ path planner
+A C++ path planner providing an algorithm to assign agents to targets
+
+## Author
+Chase E. Stewart
+
+## Usage
+library libpathfinding/ is a shared library that provides a wrapper over boost::geometry
+so as to provide a desired algorithm for multi-quadcopter pathfinding.
+
+The layout of this repository is as follows
+_libpathfinding/:_ a directory holding the shared library for the path algorithm
+_main.c:_ an example function pre-loaded with some tests that exercises libpathfinding
+_render_results.py:_ a python program that renders outputs of libpathfinding's print\_result() via matplotlib
+
+## Pre-Installation
+From an absolutely unmodified version of WSL Ubuntu-24.04
+
+* First, clone this repository
+```shell
+git clone git@github.com:ChaseStewart/libPathfindingCpp.git
+```
+* Then, install the boost library
+```shell
+sudo apt-get install libboost-all-dev
+```
+* Install python and its needed libraries, if you haven't
+```shell
+sudo apt-get install python3
+sudo apt-get install python3-matplotlib
+sudo apt-get install python3-numpy
+```
+Now you will be ready to compile and run the program
+
+## Installation and Running
+Follow these steps to exercise the library example
+
+* From `libPathfindingCpp/`, call `make`
+* [Optional] Run `./main` and observe outputs
+* Run `./main > results.csv`
+* run `./render_results.py` **NOTE: your terminal must be capable of popping up windows- my WSL from Windows 11 can do this**
+  + in case you have trouble with this, I have provided captures of the test results. These should be deterministic
+
+## Design Goals
+As far as the high level design of this project- I wanted to accomplish a few things:
+* Try to use idiomatic, maintainable, and extensible methods as much as possible
+* Separate aspects of algorithm from usage from the start and provide a sensible interface
+* Show my own reasoning- for example don't use vibe coding to jam the prompt into a format for A* search and call it a day
+* Try to show some algorithmic thinking, including anticipating and resolving corner cases
+
+## Design Philosophy
+So then, I thought about this problem and broke it down like this:
+* There will only ever be 4 quadcopters, so algorithmic complexity is not quite punishing here
+   + Where there are trade-offs, we want to optimize for correctness
+   + Double and triple checking against crossed paths is a decision I am willing to defend
+* I am approaching this geometrically rather than turning some grid size of the 2D space into nodes for a search
+   + this is an informed decision based on the constraints  of what can happen in this task 
+* We can leverage boost::geometry's concepts of linestrings, polygons, and algorithms to manage complexity
+   + I did not fuss about the computational complexity of boost::geometry algorithms- again there are only 4 quadcopters
+* All circles are convex shapes, so **we will use the [convex_hull algorithm](https://en.wikipedia.org/wiki/Convex_hull) to tightly pathfind around one or many obstacles**
+   + First turn the line into a thin stroked path, then do a boolean OR of the path-line with all obstacles in the way, then do a convex hull of that compound shape
+   + Try one side of that compound shape, then the other if the first goes out of bounds
+   + union (boolean OR) and convex\_hull are both implemented in boost::geometry and are simple to use with my types
+   + Additionally, intersects and 
+   + So then, we should either have a clockwise or counterclockwise path around any legal combination of non-touching obstacles
+   + touching obstacles would create a non-circular keepout area, and thus are considered illegal
+* To handle multiple paths wrapping around an obstacle, there is a sort of "backoff" of extra buffer around obstacles for subsequent agents
+   + if the crossed paths cannot be resolved, this backoff will eventually lead to the algorithm failing with an exception
+   + This should only (rightly) trigger in devilishly complex scenarios where I can't even talk through a fix with the picture in front of me
+
+## Algorithm
+The high level algorithm is this
+1. validate all inputs, exit with error if any invalid case such as obstacle fully covers boundary or more than 4 agents
+2. Iterate over each target in order added, each available agent bids a path and distance
+3. For their bids, agents prefer straight line paths if acceptable, or else generate curved line paths (described below) as necessary
+4. After all available agents bid, the target accepts the bid with shortest distance, selected agent is removed from further consideration
+5. If we run out of agents before targets, we skip the rest of targets, and no further paths are generated
+6. After all targets have accepted bids, or after agents run out, if there are two or more accepted bids, we check for intersections
+7. For every combination [i,j]; i != j && i < accepted\_bids  && j < accepted\_bids in reverse order, check for intersection between paths
+8. If there is an intersection, i and j swap their agents, and their paths are recalculated without re-bidding
+9. repeat steps 6 - 8 until we get through combinations without an intersection- if this goes indefinitely, eventually algorithm will raise exception
+10. return list of paths
+
