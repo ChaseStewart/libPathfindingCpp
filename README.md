@@ -1,6 +1,7 @@
 # libPathfindingCpp
 A C++ path planner providing an algorithm to assign agents to targets.
-See [Test Results](#test-results) to get a sense of what this does
+
+See [Test Results](#test-results) to get a sense of what this does.
 
 ## Author
 Chase E. Stewart
@@ -9,10 +10,12 @@ Chase E. Stewart
 library libpathfinding/ is a shared library that provides a wrapper over boost::geometry
 so as to provide a desired algorithm for multi-quadcopter pathfinding.
 
-The layout of this repository is as follows
-_libpathfinding/:_ a directory holding the shared library for the path algorithm
-_main.c:_ an example function pre-loaded with some tests that exercises libpathfinding
-_render_results.py:_ a python program that renders outputs of libpathfinding's print\_result() via matplotlib
+The layout of this repository is as follows:
+* _libpathfinding/:_ a directory holding the shared library for the path algorithm
+* _main.cpp:_ an example function pre-loaded with some tests for `libpathfinding/` described in [Test Results](#test-results)
+* _render_results.py:_ a python program that renders outputs of libpathfinding's `print\_result()` via matplotlib
+* _results/:_ a folder with .png images of the library working on main.cpp's tests
+* _extra/:_ folder with DroneStatus.msg
 
 ## Setup
 ### Pre-Installation
