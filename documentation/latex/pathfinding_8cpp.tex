@@ -1,0 +1,335 @@
+\doxysection{/home/vtrre/\+Projects/\+Git\+Hub/lib\+Pathfinding\+Cpp/libpathfinding/pathfinding.cpp File Reference}
+\hypertarget{pathfinding_8cpp}{}\label{pathfinding_8cpp}\index{/home/vtrre/Projects/GitHub/libPathfindingCpp/libpathfinding/pathfinding.cpp@{/home/vtrre/Projects/GitHub/libPathfindingCpp/libpathfinding/pathfinding.cpp}}
+
+
+Library source for libpathfinding.  
+
+
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$cmath$>$}\newline
+{\ttfamily \#include $<$boost/geometry.\+hpp$>$}\newline
+{\ttfamily \#include $<$boost/geometry/geometries/point\+\_\+xy.\+hpp$>$}\newline
+{\ttfamily \#include $<$boost/geometry/io/dsv/write.\+hpp$>$}\newline
+{\ttfamily \#include "{}pathfinding.\+hpp"{}}\newline
+Include dependency graph for pathfinding.\+cpp\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{pathfinding_8cpp__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{pathfinding_8cpp_aabb3fd94c8ce7fa3e87ad990f7d45850}{swap\+\_\+agents}} (vector$<$ \mbox{\hyperlink{pathfinding_8hpp_structpathfind__result}{pathfind\+\_\+result}} $>$ \&pr, int idx\+\_\+1, int idx\+\_\+2)
+\begin{DoxyCompactList}\small\item\em exchange agents between two final pathfinding results Throws std\+::out\+\_\+of\+\_\+range if idx\+\_\+1 or idx\+\_\+2 \texorpdfstring{$>$}{>}= size() \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{pathfinding_8hpp_a86f22d25652f7746feb05ac4b340086b}{Line}} \mbox{\hyperlink{pathfinding_8cpp_ae717939d7ef351d5ee5db98638de2fd5}{get\+\_\+obstacle\+\_\+avoid\+\_\+path}} (\mbox{\hyperlink{pathfinding_8hpp_a86f22d25652f7746feb05ac4b340086b}{Line}} straight\+\_\+path, vector$<$ \mbox{\hyperlink{pathfinding_8hpp_structobstacle}{obstacle}} $>$ \&obstacles, bool is\+\_\+clockwise)
+\begin{DoxyCompactList}\small\item\em Create the curved line path that avoids obstacles for a single agent Steps are\+: create union of straight\+\_\+path and obstacles, get convex hull of union, create resulting path from a subset of convex\+\_\+hull points and start/end. \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{pathfinding_8hpp_a86f22d25652f7746feb05ac4b340086b}{Line}} \mbox{\hyperlink{pathfinding_8cpp_a16429218fd9dc557bed134792a10c93f}{find\+\_\+convex\+\_\+hull\+\_\+subset}} (\mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}} agent, \mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}} target, \mbox{\hyperlink{pathfinding_8hpp_a86f22d25652f7746feb05ac4b340086b}{Line}} convex\+\_\+hull, bool is\+\_\+clockwise)
+\begin{DoxyCompactList}\small\item\em given a convex hull, agent, and target, find subset of points from agent to target this involves finding closest point in convex hull to agent and target, and taking a subvector \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{pathfinding_8hpp_a86f22d25652f7746feb05ac4b340086b}{Line}} \mbox{\hyperlink{pathfinding_8cpp_a8473addaea09794238f568b9d1b9dd4a}{calculate\+\_\+path}} (\mbox{\hyperlink{pathfinding_8hpp_a58e6558443cd17457f7b993813ae14a9}{Boundary}} \&bounds, \mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}} agent, \mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}} target, vector$<$ \mbox{\hyperlink{pathfinding_8hpp_structobstacle}{obstacle}} $>$ \&obstacles)
+\begin{DoxyCompactList}\small\item\em Calculate a path from agent to target, this is sort of a state machine that selects straight or curved path, and then orchestrates curved path design if necessary. \end{DoxyCompactList}\item 
+static vector$<$ \mbox{\hyperlink{pathfinding_8hpp_structobstacle}{obstacle}} $>$ \mbox{\hyperlink{pathfinding_8cpp_a965b2b061109d103b1b47bdf20340402}{get\+\_\+intersecting\+\_\+obstacles}} (\mbox{\hyperlink{pathfinding_8hpp_a86f22d25652f7746feb05ac4b340086b}{Line}} path, vector$<$ \mbox{\hyperlink{pathfinding_8hpp_structobstacle}{obstacle}} $>$ obstacles)
+\begin{DoxyCompactList}\small\item\em Test whether a provided path crosses one or more obstacles. \end{DoxyCompactList}\item 
+static bool \mbox{\hyperlink{pathfinding_8cpp_a1e7c55650066f36d71ff67781c4cd469}{is\+\_\+path\+\_\+crossing}} (\mbox{\hyperlink{pathfinding_8hpp_structpathfind__result}{pathfind\+\_\+result}} p1, \mbox{\hyperlink{pathfinding_8hpp_structpathfind__result}{pathfind\+\_\+result}} p2)
+\begin{DoxyCompactList}\small\item\em test whether two paths intersect \end{DoxyCompactList}\item 
+static bool \mbox{\hyperlink{pathfinding_8cpp_addcf6ef1d57037e2c8cbbdfa84d95b5e}{is\+\_\+path\+\_\+in\+\_\+bounds}} (\mbox{\hyperlink{pathfinding_8hpp_a86f22d25652f7746feb05ac4b340086b}{Line}} path, \mbox{\hyperlink{pathfinding_8hpp_a58e6558443cd17457f7b993813ae14a9}{Boundary}} bounds)
+\begin{DoxyCompactList}\small\item\em Test whether any point in a path ever leaves the boundary. \end{DoxyCompactList}\item 
+static bool \mbox{\hyperlink{pathfinding_8cpp_a6b3e977121b0b26b14af224170e533b3}{is\+\_\+point\+\_\+in\+\_\+bounds}} (\mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}} p, \mbox{\hyperlink{pathfinding_8hpp_a58e6558443cd17457f7b993813ae14a9}{Boundary}} bounds)
+\begin{DoxyCompactList}\small\item\em test whether a point is in bounds \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{pathfinding_8hpp_a0943e9f7effc752b57932fb71b84b132}{Multi\+Polygon}} \mbox{\hyperlink{pathfinding_8cpp_afb11d95e51504212b4b4a93a26cb4e72}{circle\+\_\+from\+\_\+obstacle}} (\mbox{\hyperlink{pathfinding_8hpp_structobstacle}{obstacle}} o, double extra\+\_\+buffer=0)
+\begin{DoxyCompactList}\small\item\em Turn an obstacle into a circular Multi\+Polygon. \end{DoxyCompactList}\item 
+static double \mbox{\hyperlink{pathfinding_8cpp_a02e65bc6ea74e4f26b0a28313e692ae1}{get\+\_\+obstacle\+\_\+buffer\+\_\+size}} (void)
+\begin{DoxyCompactList}\small\item\em return an ever-\/growing amount of keepout as extra buffer around shapes Necessary when multiple agents want to circumvent the same \doxylink{pathfinding_8hpp_structobstacle}{obstacle(s)} to reach their targets This is fed into circle\+\_\+from\+\_\+obstacle\textquotesingle{}s optional arg for \doxylink{pathfinding_8cpp_ae717939d7ef351d5ee5db98638de2fd5}{get\+\_\+obstacle\+\_\+avoid\+\_\+path()} \end{DoxyCompactList}\item 
+\Hypertarget{pathfinding_8cpp_aefb06f78401961978e5f17e461258e88}\label{pathfinding_8cpp_aefb06f78401961978e5f17e461258e88} 
+vector$<$ \mbox{\hyperlink{pathfinding_8hpp_structpathfind__result}{pathfind\+\_\+result}} $>$ {\bfseries pathfind} (\mbox{\hyperlink{pathfinding_8hpp_a58e6558443cd17457f7b993813ae14a9}{Boundary}} \&bounds, vector$<$ \mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}} $>$ \&agents, vector$<$ \mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}} $>$ \&targets, vector$<$ \mbox{\hyperlink{pathfinding_8hpp_structobstacle}{obstacle}} $>$ \&obstacles)
+\begin{DoxyCompactList}\small\item\em the \doxylink{pathfinding_8cpp_aefb06f78401961978e5f17e461258e88}{pathfind()} function is the core offering of this libpathfinding library see pathfinding.\+h and the README.\+md for details \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{pathfinding_8cpp_a922517e3c331c8e6d70497f405e7c063}{is\+\_\+valid\+\_\+input\+\_\+params}} (\mbox{\hyperlink{pathfinding_8hpp_a58e6558443cd17457f7b993813ae14a9}{Boundary}} \&bounds, vector$<$ \mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}} $>$ \&agents, vector$<$ \mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}} $>$ \&targets, vector$<$ \mbox{\hyperlink{pathfinding_8hpp_structobstacle}{obstacle}} $>$ \&obstacles)
+\begin{DoxyCompactList}\small\item\em validate the input agents and targets. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{pathfinding_8cpp_aaef56b14dc14713de31633af21e55907}{print\+\_\+result}} (\mbox{\hyperlink{pathfinding_8hpp_a58e6558443cd17457f7b993813ae14a9}{Boundary}} \&bounds, vector$<$ \mbox{\hyperlink{pathfinding_8hpp_structobstacle}{obstacle}} $>$ \&obstacles, vector$<$ \mbox{\hyperlink{pathfinding_8hpp_structpathfind__result}{pathfind\+\_\+result}} $>$ \&results)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{pathfinding_8cpp_a91d4a2ffe7310f1e5d315f1247e47bc4}\label{pathfinding_8cpp_a91d4a2ffe7310f1e5d315f1247e47bc4} 
+const int {\bfseries points\+\_\+per\+\_\+circle} = 16
+\begin{DoxyCompactList}\small\item\em configurable number of points around circles \end{DoxyCompactList}\item 
+\Hypertarget{pathfinding_8cpp_a7f5a2b708aba3a6a25b0b802742c5e53}\label{pathfinding_8cpp_a7f5a2b708aba3a6a25b0b802742c5e53} 
+const double {\bfseries line\+\_\+buffer\+\_\+distance} = 0.\+1
+\begin{DoxyCompactList}\small\item\em configurable relatively small "{}stroke-\/width"{} to turn lines to polygons \end{DoxyCompactList}\item 
+\Hypertarget{pathfinding_8cpp_a578b9b3f0c920296d35b9f05c28e0c5e}\label{pathfinding_8cpp_a578b9b3f0c920296d35b9f05c28e0c5e} 
+const float {\bfseries min\+\_\+keepout\+\_\+buffer} = 0.\+05
+\begin{DoxyCompactList}\small\item\em scalar for \doxylink{pathfinding_8cpp_a02e65bc6ea74e4f26b0a28313e692ae1}{get\+\_\+obstacle\+\_\+buffer\+\_\+size()} \end{DoxyCompactList}\item 
+static int \mbox{\hyperlink{pathfinding_8cpp_a0274e1e03331bac03de0e17fcefa14ea}{buffer\+\_\+offset}} = 1
+\begin{DoxyCompactList}\small\item\em static variable, ensures n-\/many wraps around obstacles don\textquotesingle{}t take same path each subsequent call to get\+\_\+obstacle\+\_\+avoid\+\_\+path will have additional keepout \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Library source for libpathfinding. 
+
+\begin{DoxyAuthor}{Author}
+Chase E. Stewart 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+4/24/2025 
+\end{DoxyDate}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{pathfinding_8cpp_a8473addaea09794238f568b9d1b9dd4a}\label{pathfinding_8cpp_a8473addaea09794238f568b9d1b9dd4a} 
+\index{pathfinding.cpp@{pathfinding.cpp}!calculate\_path@{calculate\_path}}
+\index{calculate\_path@{calculate\_path}!pathfinding.cpp@{pathfinding.cpp}}
+\doxysubsubsection{\texorpdfstring{calculate\_path()}{calculate\_path()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{pathfinding_8hpp_a86f22d25652f7746feb05ac4b340086b}{Line}} calculate\+\_\+path (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{pathfinding_8hpp_a58e6558443cd17457f7b993813ae14a9}{Boundary}} \&}]{bounds,  }\item[{\mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}}}]{agent,  }\item[{\mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}}}]{target,  }\item[{vector$<$ \mbox{\hyperlink{pathfinding_8hpp_structobstacle}{obstacle}} $>$ \&}]{obstacles }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Calculate a path from agent to target, this is sort of a state machine that selects straight or curved path, and then orchestrates curved path design if necessary. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bounds} & outer bounding Box \\
+\hline
+{\em agent} & agent that must route to target \\
+\hline
+{\em target} & target to be routed to \\
+\hline
+{\em obstacles} & vector of circular obstacles to avoid \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a new straight or curved path from agent to target 
+\end{DoxyReturn}
+Easy case\+: a straight line to the target will always be the best bid for a particular agent if it is avaialable
+
+Hard case\+: if even one obstacle intersects the path, curved object-\/avoiding path is needed\Hypertarget{pathfinding_8cpp_afb11d95e51504212b4b4a93a26cb4e72}\label{pathfinding_8cpp_afb11d95e51504212b4b4a93a26cb4e72} 
+\index{pathfinding.cpp@{pathfinding.cpp}!circle\_from\_obstacle@{circle\_from\_obstacle}}
+\index{circle\_from\_obstacle@{circle\_from\_obstacle}!pathfinding.cpp@{pathfinding.cpp}}
+\doxysubsubsection{\texorpdfstring{circle\_from\_obstacle()}{circle\_from\_obstacle()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{pathfinding_8hpp_a0943e9f7effc752b57932fb71b84b132}{Multi\+Polygon}} circle\+\_\+from\+\_\+obstacle (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{pathfinding_8hpp_structobstacle}{obstacle}}}]{o,  }\item[{double}]{extra\+\_\+buffer = {\ttfamily 0} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Turn an obstacle into a circular Multi\+Polygon. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em o} & obstacle to become a circle \\
+\hline
+{\em extra\+\_\+buffer} & optionally increase buffer around obstacle. See \doxylink{pathfinding_8cpp_a02e65bc6ea74e4f26b0a28313e692ae1}{get\+\_\+obstacle\+\_\+buffer\+\_\+size()} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Multi\+Polygon circular polygon made of 16 evenly spaced points around o.\+p 
+\end{DoxyReturn}
+We use the concept of a buffer around a point to create our circle boost\+::geometry strategies are effectively options about how we will generate our circle\Hypertarget{pathfinding_8cpp_a16429218fd9dc557bed134792a10c93f}\label{pathfinding_8cpp_a16429218fd9dc557bed134792a10c93f} 
+\index{pathfinding.cpp@{pathfinding.cpp}!find\_convex\_hull\_subset@{find\_convex\_hull\_subset}}
+\index{find\_convex\_hull\_subset@{find\_convex\_hull\_subset}!pathfinding.cpp@{pathfinding.cpp}}
+\doxysubsubsection{\texorpdfstring{find\_convex\_hull\_subset()}{find\_convex\_hull\_subset()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{pathfinding_8hpp_a86f22d25652f7746feb05ac4b340086b}{Line}} find\+\_\+convex\+\_\+hull\+\_\+subset (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}}}]{agent,  }\item[{\mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}}}]{target,  }\item[{\mbox{\hyperlink{pathfinding_8hpp_a86f22d25652f7746feb05ac4b340086b}{Line}}}]{convex\+\_\+hull,  }\item[{bool}]{is\+\_\+clockwise }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+given a convex hull, agent, and target, find subset of points from agent to target this involves finding closest point in convex hull to agent and target, and taking a subvector 
+
+
+\begin{DoxyParams}{Parameters}
+{\em agent} & the Point of the agent, first point in straight\+\_\+path \\
+\hline
+{\em target} & the Point of the final target, second and final point in straight\+\_\+path \\
+\hline
+{\em convex\+\_\+hull} & a closed-\/shape convex hull that goes around but doesn\textquotesingle{}t touch agent/target \\
+\hline
+{\em is\+\_\+clockwise} & true to reverse convex\+\_\+hull before iterating \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Line with the relevant portion of provided convex\+\_\+hull for pathfinding 
+\end{DoxyReturn}
+iterate around whole closed shape, checking each points distances to agent and to target, keep a running tally of closest point to each
+
+now that we have closest points, return subset of closed shape from min(start,end) to max(start,end) TODO this is suboptimal and it should be possible to reason out this min/max/ reverse issue\Hypertarget{pathfinding_8cpp_a965b2b061109d103b1b47bdf20340402}\label{pathfinding_8cpp_a965b2b061109d103b1b47bdf20340402} 
+\index{pathfinding.cpp@{pathfinding.cpp}!get\_intersecting\_obstacles@{get\_intersecting\_obstacles}}
+\index{get\_intersecting\_obstacles@{get\_intersecting\_obstacles}!pathfinding.cpp@{pathfinding.cpp}}
+\doxysubsubsection{\texorpdfstring{get\_intersecting\_obstacles()}{get\_intersecting\_obstacles()}}
+{\footnotesize\ttfamily static vector$<$ \mbox{\hyperlink{pathfinding_8hpp_structobstacle}{obstacle}} $>$ get\+\_\+intersecting\+\_\+obstacles (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{pathfinding_8hpp_a86f22d25652f7746feb05ac4b340086b}{Line}}}]{path,  }\item[{vector$<$ \mbox{\hyperlink{pathfinding_8hpp_structobstacle}{obstacle}} $>$}]{obstacles }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Test whether a provided path crosses one or more obstacles. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em path} & Line from target to agent to check for obstacles \\
+\hline
+{\em obstacles} & A vector of circular obstacles \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+vector of intersecting obstacles, empty if no intersection 
+\end{DoxyReturn}
+rather than check whether every point or n-\/many points along the line is within a particular radius, we instead create a circle as a keepout buffer around a point and then use the boost\+::geometry intersection checker\Hypertarget{pathfinding_8cpp_ae717939d7ef351d5ee5db98638de2fd5}\label{pathfinding_8cpp_ae717939d7ef351d5ee5db98638de2fd5} 
+\index{pathfinding.cpp@{pathfinding.cpp}!get\_obstacle\_avoid\_path@{get\_obstacle\_avoid\_path}}
+\index{get\_obstacle\_avoid\_path@{get\_obstacle\_avoid\_path}!pathfinding.cpp@{pathfinding.cpp}}
+\doxysubsubsection{\texorpdfstring{get\_obstacle\_avoid\_path()}{get\_obstacle\_avoid\_path()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{pathfinding_8hpp_a86f22d25652f7746feb05ac4b340086b}{Line}} get\+\_\+obstacle\+\_\+avoid\+\_\+path (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{pathfinding_8hpp_a86f22d25652f7746feb05ac4b340086b}{Line}}}]{straight\+\_\+path,  }\item[{vector$<$ \mbox{\hyperlink{pathfinding_8hpp_structobstacle}{obstacle}} $>$ \&}]{obstacles,  }\item[{bool}]{is\+\_\+clockwise }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Create the curved line path that avoids obstacles for a single agent Steps are\+: create union of straight\+\_\+path and obstacles, get convex hull of union, create resulting path from a subset of convex\+\_\+hull points and start/end. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em straight\+\_\+path} & a two-\/point line with \{agent, target\} \\
+\hline
+{\em obstacles} & vector of all obstacles \\
+\hline
+{\em is\+\_\+clockwise} & true to reverse the convex\+\_\+hull output before iterating \\
+\hline
+\end{DoxyParams}
+iteratively create a polygon union of all obstacles intersecting with the straight line path we expect to have at least one, or else we would have used pathfinding()\textquotesingle{}s straight\+\_\+path
+
+create an ever-\/slightly-\/wider circle (see get\+\_\+obstacle\+\_\+buffer\+\_\+size) and stick it to our thin line\+\_\+buf polygon
+
+now the rest of the algorithm is going to be about effectively selecting a subset of the convex hull and making sure it exactly reaches our points
+
+with infinite time I\textquotesingle{}d like to figure out why I have so much trouble with order of these points-\/ but this works in a nutshell-\/ if it appears clear we hop from the first point to the far end of the convex hull and vice versa, and thus this path crosses itself, just reverse it
+
+because we\textquotesingle{}re making a convex hull around a stroked path, there are some annoying small points around the buffer near each endpoint we have this keepout to filter out those noisy parts and just take the path around the \doxylink{pathfinding_8hpp_structobstacle}{obstacle(s)}\Hypertarget{pathfinding_8cpp_a02e65bc6ea74e4f26b0a28313e692ae1}\label{pathfinding_8cpp_a02e65bc6ea74e4f26b0a28313e692ae1} 
+\index{pathfinding.cpp@{pathfinding.cpp}!get\_obstacle\_buffer\_size@{get\_obstacle\_buffer\_size}}
+\index{get\_obstacle\_buffer\_size@{get\_obstacle\_buffer\_size}!pathfinding.cpp@{pathfinding.cpp}}
+\doxysubsubsection{\texorpdfstring{get\_obstacle\_buffer\_size()}{get\_obstacle\_buffer\_size()}}
+{\footnotesize\ttfamily static double get\+\_\+obstacle\+\_\+buffer\+\_\+size (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+return an ever-\/growing amount of keepout as extra buffer around shapes Necessary when multiple agents want to circumvent the same \doxylink{pathfinding_8hpp_structobstacle}{obstacle(s)} to reach their targets This is fed into circle\+\_\+from\+\_\+obstacle\textquotesingle{}s optional arg for \doxylink{pathfinding_8cpp_ae717939d7ef351d5ee5db98638de2fd5}{get\+\_\+obstacle\+\_\+avoid\+\_\+path()} 
+
+\begin{DoxyReturn}{Returns}
+configurable min\+\_\+buffer value \texorpdfstring{$\ast$}{*} incrementing buffer\+\_\+offset var 
+\end{DoxyReturn}
+\Hypertarget{pathfinding_8cpp_a1e7c55650066f36d71ff67781c4cd469}\label{pathfinding_8cpp_a1e7c55650066f36d71ff67781c4cd469} 
+\index{pathfinding.cpp@{pathfinding.cpp}!is\_path\_crossing@{is\_path\_crossing}}
+\index{is\_path\_crossing@{is\_path\_crossing}!pathfinding.cpp@{pathfinding.cpp}}
+\doxysubsubsection{\texorpdfstring{is\_path\_crossing()}{is\_path\_crossing()}}
+{\footnotesize\ttfamily static bool is\+\_\+path\+\_\+crossing (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{pathfinding_8hpp_structpathfind__result}{pathfind\+\_\+result}}}]{p1,  }\item[{\mbox{\hyperlink{pathfinding_8hpp_structpathfind__result}{pathfind\+\_\+result}}}]{p2 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+test whether two paths intersect 
+
+
+\begin{DoxyParams}{Parameters}
+{\em p1} & one pathfinding\+\_\+result, from which path will be obtained \\
+\hline
+{\em p2} & another pathfinding\+\_\+result, from which path will be obtained \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if p1.\+path and p2.\+path intersect, else false 
+\end{DoxyReturn}
+\Hypertarget{pathfinding_8cpp_addcf6ef1d57037e2c8cbbdfa84d95b5e}\label{pathfinding_8cpp_addcf6ef1d57037e2c8cbbdfa84d95b5e} 
+\index{pathfinding.cpp@{pathfinding.cpp}!is\_path\_in\_bounds@{is\_path\_in\_bounds}}
+\index{is\_path\_in\_bounds@{is\_path\_in\_bounds}!pathfinding.cpp@{pathfinding.cpp}}
+\doxysubsubsection{\texorpdfstring{is\_path\_in\_bounds()}{is\_path\_in\_bounds()}}
+{\footnotesize\ttfamily static bool is\+\_\+path\+\_\+in\+\_\+bounds (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{pathfinding_8hpp_a86f22d25652f7746feb05ac4b340086b}{Line}}}]{path,  }\item[{\mbox{\hyperlink{pathfinding_8hpp_a58e6558443cd17457f7b993813ae14a9}{Boundary}}}]{bounds }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Test whether any point in a path ever leaves the boundary. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em path} & path under test \\
+\hline
+{\em bounds} & outer boundary Box, all points along p should be inside this \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if path between \{target,agent\} never leaves the boundary, else false 
+\end{DoxyReturn}
+\Hypertarget{pathfinding_8cpp_a6b3e977121b0b26b14af224170e533b3}\label{pathfinding_8cpp_a6b3e977121b0b26b14af224170e533b3} 
+\index{pathfinding.cpp@{pathfinding.cpp}!is\_point\_in\_bounds@{is\_point\_in\_bounds}}
+\index{is\_point\_in\_bounds@{is\_point\_in\_bounds}!pathfinding.cpp@{pathfinding.cpp}}
+\doxysubsubsection{\texorpdfstring{is\_point\_in\_bounds()}{is\_point\_in\_bounds()}}
+{\footnotesize\ttfamily static bool is\+\_\+point\+\_\+in\+\_\+bounds (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}}}]{p,  }\item[{\mbox{\hyperlink{pathfinding_8hpp_a58e6558443cd17457f7b993813ae14a9}{Boundary}}}]{bounds }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+test whether a point is in bounds 
+
+
+\begin{DoxyParams}{Parameters}
+{\em p} & point under test \\
+\hline
+{\em bounds} & outer boundary Box point p should be inside this \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if path never leaves the boundary, else false 
+\end{DoxyReturn}
+\Hypertarget{pathfinding_8cpp_a922517e3c331c8e6d70497f405e7c063}\label{pathfinding_8cpp_a922517e3c331c8e6d70497f405e7c063} 
+\index{pathfinding.cpp@{pathfinding.cpp}!is\_valid\_input\_params@{is\_valid\_input\_params}}
+\index{is\_valid\_input\_params@{is\_valid\_input\_params}!pathfinding.cpp@{pathfinding.cpp}}
+\doxysubsubsection{\texorpdfstring{is\_valid\_input\_params()}{is\_valid\_input\_params()}}
+{\footnotesize\ttfamily bool is\+\_\+valid\+\_\+input\+\_\+params (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{pathfinding_8hpp_a58e6558443cd17457f7b993813ae14a9}{Boundary}} \&}]{bounds,  }\item[{vector$<$ \mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}} $>$ \&}]{agents,  }\item[{vector$<$ \mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}} $>$ \&}]{targets,  }\item[{vector$<$ \mbox{\hyperlink{pathfinding_8hpp_structobstacle}{obstacle}} $>$ \&}]{obstacles }\end{DoxyParamCaption})}
+
+
+
+validate the input agents and targets. 
+
+If this fails, pathfinding cannot proceed 
+\begin{DoxyParams}{Parameters}
+{\em bounds} & Outer boundary box \\
+\hline
+{\em agents} & vector of all agents \\
+\hline
+{\em targets} & vector of all targets \\
+\hline
+{\em obstacles} & vector of all obstacles \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if input params are valid, else false 
+\end{DoxyReturn}
+\Hypertarget{pathfinding_8cpp_aaef56b14dc14713de31633af21e55907}\label{pathfinding_8cpp_aaef56b14dc14713de31633af21e55907} 
+\index{pathfinding.cpp@{pathfinding.cpp}!print\_result@{print\_result}}
+\index{print\_result@{print\_result}!pathfinding.cpp@{pathfinding.cpp}}
+\doxysubsubsection{\texorpdfstring{print\_result()}{print\_result()}}
+{\footnotesize\ttfamily void print\+\_\+result (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{pathfinding_8hpp_a58e6558443cd17457f7b993813ae14a9}{Boundary}} \&}]{bounds,  }\item[{vector$<$ \mbox{\hyperlink{pathfinding_8hpp_structobstacle}{obstacle}} $>$ \&}]{obstacles,  }\item[{vector$<$ \mbox{\hyperlink{pathfinding_8hpp_structpathfind__result}{pathfind\+\_\+result}} $>$ \&}]{results }\end{DoxyParamCaption})}
+
+The associated python rendering script render\+\_\+result.\+py is designed to ignore blank lines and lines that begin with tab so that output from this library can be read for diagnostic information or simply piped to a .csv to render with the python script\Hypertarget{pathfinding_8cpp_aabb3fd94c8ce7fa3e87ad990f7d45850}\label{pathfinding_8cpp_aabb3fd94c8ce7fa3e87ad990f7d45850} 
+\index{pathfinding.cpp@{pathfinding.cpp}!swap\_agents@{swap\_agents}}
+\index{swap\_agents@{swap\_agents}!pathfinding.cpp@{pathfinding.cpp}}
+\doxysubsubsection{\texorpdfstring{swap\_agents()}{swap\_agents()}}
+{\footnotesize\ttfamily static void swap\+\_\+agents (\begin{DoxyParamCaption}\item[{vector$<$ \mbox{\hyperlink{pathfinding_8hpp_structpathfind__result}{pathfind\+\_\+result}} $>$ \&}]{pr,  }\item[{int}]{idx\+\_\+1,  }\item[{int}]{idx\+\_\+2 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+exchange agents between two final pathfinding results Throws std\+::out\+\_\+of\+\_\+range if idx\+\_\+1 or idx\+\_\+2 \texorpdfstring{$>$}{>}= size() 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pr} & the full pathfinding results \\
+\hline
+{\em idx\+\_\+1} & the first index into pr to swap \\
+\hline
+{\em idx\+\_\+2} & the second index into pr to swap \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Variable Documentation}
+\Hypertarget{pathfinding_8cpp_a0274e1e03331bac03de0e17fcefa14ea}\label{pathfinding_8cpp_a0274e1e03331bac03de0e17fcefa14ea} 
+\index{pathfinding.cpp@{pathfinding.cpp}!buffer\_offset@{buffer\_offset}}
+\index{buffer\_offset@{buffer\_offset}!pathfinding.cpp@{pathfinding.cpp}}
+\doxysubsubsection{\texorpdfstring{buffer\_offset}{buffer\_offset}}
+{\footnotesize\ttfamily int buffer\+\_\+offset = 1\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+static variable, ensures n-\/many wraps around obstacles don\textquotesingle{}t take same path each subsequent call to get\+\_\+obstacle\+\_\+avoid\+\_\+path will have additional keepout 
+
+incrementing value to increase subsequent keepout around obstacles 

@@ -1,0 +1,55 @@
+\doxysection{pathfinding.\+hpp}
+\hypertarget{pathfinding_8hpp_source}{}\label{pathfinding_8hpp_source}\index{/home/vtrre/Projects/GitHub/libPathfindingCpp/libpathfinding/pathfinding.hpp@{/home/vtrre/Projects/GitHub/libPathfindingCpp/libpathfinding/pathfinding.hpp}}
+\mbox{\hyperlink{pathfinding_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#ifndef\ \_\_PATHFINDING\_HPP\_}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#define\ \_\_PATHFINDING\_HPP\_}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <boost/geometry.hpp>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <boost/geometry/geometries/point\_xy.hpp>}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{namespace\ }bg\ =\ boost::geometry;}
+\DoxyCodeLine{00022\ \textcolor{keyword}{using\ }\mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}}\ =\ bg::model::d2::point\_xy<double>;\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{using\ }\mbox{\hyperlink{pathfinding_8hpp_a58e6558443cd17457f7b993813ae14a9}{Boundary}}\ =\ bg::model::box<Point>;\ }
+\DoxyCodeLine{00024\ \textcolor{keyword}{using\ }\mbox{\hyperlink{pathfinding_8hpp_a86f22d25652f7746feb05ac4b340086b}{Line}}\ =\ bg::model::linestring<Point>;\ }
+\DoxyCodeLine{00025\ \textcolor{keyword}{using\ }\mbox{\hyperlink{pathfinding_8hpp_ad0bfc00ad25790731e7a5fdb76b21f1d}{MultiLine}}\ =\ bg::model::multi\_linestring<Point>;\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{using\ }\mbox{\hyperlink{pathfinding_8hpp_a4d27f618d313e04ac9573e9623612be3}{Polygon}}\ =\ bg::model::polygon<Point>;\ }
+\DoxyCodeLine{00027\ \textcolor{keyword}{using\ }\mbox{\hyperlink{pathfinding_8hpp_a0943e9f7effc752b57932fb71b84b132}{MultiPolygon}}\ =\ bg::model::multi\_polygon<Polygon>;\ }
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#define\ LP\_PRINT\_GEOM(x)\ bg::dsv(x,\ "{},"{},"{}("{},"{})"{},"{},"{},"{}["{},"{}]"{},"{},"{})}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{pathfinding_8hpp_a50a5f05dd7a387e6b6537392ba22ea71}{NUM\_MAX\_AGENTS}}\ =\ 4;\ }
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00040\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{pathfinding_8hpp_structobstacle}{obstacle}}}
+\DoxyCodeLine{00041\ \{}
+\DoxyCodeLine{00042\ \ \ \ \mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}}\ \mbox{\hyperlink{pathfinding_8hpp_a2bb51b9cdd48e47b571660fb7321f5ef}{p}};\ }
+\DoxyCodeLine{00043\ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{pathfinding_8hpp_a40d7c1655a5616263647d0d0bbefda01}{radius}};\ }
+\DoxyCodeLine{00044\ \};}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00050\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{pathfinding_8hpp_structagent__bids}{agent\_bids}}}
+\DoxyCodeLine{00051\ \{}
+\DoxyCodeLine{00052\ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{pathfinding_8hpp_abbdc5c6caddbd7c6abad26a33592f4bb}{agent\_vect\_idx}};\ }
+\DoxyCodeLine{00053\ \ \ \ \mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}}\ \mbox{\hyperlink{pathfinding_8hpp_a1c6940953c3ddff1e63f2b931850ef65}{agent}};\ }
+\DoxyCodeLine{00054\ \ \ \ \mbox{\hyperlink{pathfinding_8hpp_a86f22d25652f7746feb05ac4b340086b}{Line}}\ \mbox{\hyperlink{pathfinding_8hpp_a81f006f0ee9fbc30ec8536f0cf6269e4}{path}};\ }
+\DoxyCodeLine{00055\ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{pathfinding_8hpp_a1791c5389883544ae147e1eef84fd410}{distance}};\ }
+\DoxyCodeLine{00056\ \};}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00062\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{pathfinding_8hpp_structpathfind__result}{pathfind\_result}}}
+\DoxyCodeLine{00063\ \{}
+\DoxyCodeLine{00064\ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{pathfinding_8hpp_a656826054f6c89fc842dc0b5b87f9529}{id}};\ }
+\DoxyCodeLine{00065\ \ \ \ \mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}}\ \mbox{\hyperlink{pathfinding_8hpp_a5ede2f6f4b7ef87046aab91220f59a00}{agent}};\ }
+\DoxyCodeLine{00066\ \ \ \ \mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}}\ \mbox{\hyperlink{pathfinding_8hpp_a885e669500fd77e76084b124c19872b2}{target}};\ }
+\DoxyCodeLine{00067\ \ \ \ \mbox{\hyperlink{pathfinding_8hpp_a86f22d25652f7746feb05ac4b340086b}{Line}}\ \mbox{\hyperlink{pathfinding_8hpp_a70cae4058246db98a106de7f5bbd04b0}{path}};\ }
+\DoxyCodeLine{00068\ \};}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00076\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{pathfinding_8hpp_acf010059b1ecd22fe889979dda92d361}{print\_result}}(\mbox{\hyperlink{pathfinding_8hpp_a58e6558443cd17457f7b993813ae14a9}{Boundary}}\ \&bounds,\ std::vector<obstacle>\&\ obstacles,\ std::vector<pathfind\_result>\&\ results);}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00088\ std::vector<pathfind\_result>\ \mbox{\hyperlink{pathfinding_8hpp_aa80cd051b331fa691a87cd3607a36c68}{pathfind}}(\mbox{\hyperlink{pathfinding_8hpp_a58e6558443cd17457f7b993813ae14a9}{Boundary}}\ \&bounds,\ std::vector<Point>\&\ agents,\ std::vector<Point>\&\ targets,\ std::vector<obstacle>\&\ obstacles);}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00098\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{pathfinding_8hpp_a9c81f82b0246583088c9f1d56777f27f}{is\_valid\_input\_params}}(\mbox{\hyperlink{pathfinding_8hpp_a58e6558443cd17457f7b993813ae14a9}{Boundary}}\ \&bounds,\ std::vector<Point>\&\ agents,\ std::vector<Point>\&\ targets,\ std::vector<obstacle>\&\ obstacles);}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ \_\_PATHFINDING\_HPP}}
+
+\end{DoxyCode}

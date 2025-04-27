@@ -1,0 +1,234 @@
+\doxysection{/home/vtrre/\+Projects/\+Git\+Hub/lib\+Pathfinding\+Cpp/libpathfinding/pathfinding.hpp File Reference}
+\hypertarget{pathfinding_8hpp}{}\label{pathfinding_8hpp}\index{/home/vtrre/Projects/GitHub/libPathfindingCpp/libpathfinding/pathfinding.hpp@{/home/vtrre/Projects/GitHub/libPathfindingCpp/libpathfinding/pathfinding.hpp}}
+
+
+Library header file for libpathfinding.  
+
+
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$boost/geometry.\+hpp$>$}\newline
+{\ttfamily \#include $<$boost/geometry/geometries/point\+\_\+xy.\+hpp$>$}\newline
+Include dependency graph for pathfinding.\+hpp\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{pathfinding_8hpp__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=245pt]{pathfinding_8hpp__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{pathfinding_8hpp_structobstacle}{obstacle}}
+\begin{DoxyCompactList}\small\item\em a circular "{}obstacle"{} with center and radius  \mbox{\hyperlink{pathfinding_8hpp_structobstacle}{More...}}\end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{pathfinding_8hpp_structagent__bids}{agent\+\_\+bids}}
+\begin{DoxyCompactList}\small\item\em information that an agent "{}bids"{} to a target including its best path, the distance of that path the agent (to erase() if this bid is accepted)  \mbox{\hyperlink{pathfinding_8hpp_structagent__bids}{More...}}\end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{pathfinding_8hpp_structpathfind__result}{pathfind\+\_\+result}}
+\begin{DoxyCompactList}\small\item\em Struct that holds a selected \{agent, target\} pairing and the path that the winning agent bid for this target.  \mbox{\hyperlink{pathfinding_8hpp_structpathfind__result}{More...}}\end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{pathfinding_8hpp_a3589a2e401b1eaa9339e212c692949d1}\label{pathfinding_8hpp_a3589a2e401b1eaa9339e212c692949d1} 
+\#define {\bfseries LP\+\_\+\+PRINT\+\_\+\+GEOM}(x)~bg\+::dsv(x, "{},"{},"{}("{},"{})"{},"{},"{},"{}\mbox{[}"{},"{}\mbox{]}"{},"{},"{})
+\begin{DoxyCompactList}\small\item\em convenience macro to call bg\+::dsv (delimeter-\/separated value) with preset parameters for Python serialization \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}\label{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e} 
+using {\bfseries Point} = bg\+::model\+::d2\+::point\+\_\+xy$<$ double $>$
+\begin{DoxyCompactList}\small\item\em alias for boost.\+geometry\textquotesingle{}s d2\+::point\+\_\+xy$<$double$>$ \end{DoxyCompactList}\item 
+\Hypertarget{pathfinding_8hpp_a58e6558443cd17457f7b993813ae14a9}\label{pathfinding_8hpp_a58e6558443cd17457f7b993813ae14a9} 
+using {\bfseries Boundary} = bg\+::model\+::box$<$ \mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}} $>$
+\begin{DoxyCompactList}\small\item\em alias for boost.\+geometry box$<$\+Point$>$ \end{DoxyCompactList}\item 
+\Hypertarget{pathfinding_8hpp_a86f22d25652f7746feb05ac4b340086b}\label{pathfinding_8hpp_a86f22d25652f7746feb05ac4b340086b} 
+using {\bfseries Line} = bg\+::model\+::linestring$<$ \mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}} $>$
+\begin{DoxyCompactList}\small\item\em alias for boost.\+geometry linestring$<$\+Point$>$ \end{DoxyCompactList}\item 
+\Hypertarget{pathfinding_8hpp_ad0bfc00ad25790731e7a5fdb76b21f1d}\label{pathfinding_8hpp_ad0bfc00ad25790731e7a5fdb76b21f1d} 
+using {\bfseries Multi\+Line} = bg\+::model\+::multi\+\_\+linestring$<$ \mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}} $>$
+\begin{DoxyCompactList}\small\item\em alias for boost.\+geometry multi\+\_\+linestring$<$\+Point$>$ \end{DoxyCompactList}\item 
+\Hypertarget{pathfinding_8hpp_a4d27f618d313e04ac9573e9623612be3}\label{pathfinding_8hpp_a4d27f618d313e04ac9573e9623612be3} 
+using {\bfseries Polygon} = bg\+::model\+::polygon$<$ \mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}} $>$
+\begin{DoxyCompactList}\small\item\em alias for boost.\+geometry polygon$<$\+Point$>$ \end{DoxyCompactList}\item 
+\Hypertarget{pathfinding_8hpp_a0943e9f7effc752b57932fb71b84b132}\label{pathfinding_8hpp_a0943e9f7effc752b57932fb71b84b132} 
+using {\bfseries Multi\+Polygon} = bg\+::model\+::multi\+\_\+polygon$<$ \mbox{\hyperlink{pathfinding_8hpp_a4d27f618d313e04ac9573e9623612be3}{Polygon}} $>$
+\begin{DoxyCompactList}\small\item\em alias for boost.\+geometry multi\+\_\+polygon$<$\+Point$>$ \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{pathfinding_8hpp_acf010059b1ecd22fe889979dda92d361}{print\+\_\+result}} (\mbox{\hyperlink{pathfinding_8hpp_a58e6558443cd17457f7b993813ae14a9}{Boundary}} \&bounds, std\+::vector$<$ \mbox{\hyperlink{pathfinding_8hpp_structobstacle}{obstacle}} $>$ \&obstacles, std\+::vector$<$ \mbox{\hyperlink{pathfinding_8hpp_structpathfind__result}{pathfind\+\_\+result}} $>$ \&results)
+\begin{DoxyCompactList}\small\item\em Print the entire state to STDOUT, can be piped into a \texorpdfstring{$\ast$}{*}.csv file and rendered by render\+\_\+result.\+py. \end{DoxyCompactList}\item 
+std\+::vector$<$ \mbox{\hyperlink{pathfinding_8hpp_structpathfind__result}{pathfind\+\_\+result}} $>$ \mbox{\hyperlink{pathfinding_8hpp_aa80cd051b331fa691a87cd3607a36c68}{pathfind}} (\mbox{\hyperlink{pathfinding_8hpp_a58e6558443cd17457f7b993813ae14a9}{Boundary}} \&bounds, std\+::vector$<$ \mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}} $>$ \&agents, std\+::vector$<$ \mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}} $>$ \&targets, std\+::vector$<$ \mbox{\hyperlink{pathfinding_8hpp_structobstacle}{obstacle}} $>$ \&obstacles)
+\begin{DoxyCompactList}\small\item\em given boundaries, some agents, and some targets, select paths from agent to target Throws std\+::runtime\+\_\+error if a target is unreachable by any agent Throws std\+::invalid\+\_\+argument if there is a problem with the input parameters \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{pathfinding_8hpp_a9c81f82b0246583088c9f1d56777f27f}{is\+\_\+valid\+\_\+input\+\_\+params}} (\mbox{\hyperlink{pathfinding_8hpp_a58e6558443cd17457f7b993813ae14a9}{Boundary}} \&bounds, std\+::vector$<$ \mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}} $>$ \&agents, std\+::vector$<$ \mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}} $>$ \&targets, std\+::vector$<$ \mbox{\hyperlink{pathfinding_8hpp_structobstacle}{obstacle}} $>$ \&obstacles)
+\begin{DoxyCompactList}\small\item\em ensure that the input params are valid-\/ \doxylink{pathfinding_8hpp_aa80cd051b331fa691a87cd3607a36c68}{pathfind()} will call this and should not proceed if it fails \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{pathfinding_8hpp_a50a5f05dd7a387e6b6537392ba22ea71}\label{pathfinding_8hpp_a50a5f05dd7a387e6b6537392ba22ea71} 
+const int {\bfseries NUM\+\_\+\+MAX\+\_\+\+AGENTS} = 4
+\begin{DoxyCompactList}\small\item\em max number of agents allowed per the prompt \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Library header file for libpathfinding. 
+
+\begin{DoxyAuthor}{Author}
+Chase E. Stewart 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+4/24/2025 
+\end{DoxyDate}
+
+
+\doxysubsection{Class Documentation}
+\index{obstacle@{obstacle}}\label{structobstacle}
+\Hypertarget{pathfinding_8hpp_structobstacle}
+\doxysubsubsection{struct obstacle}
+a circular "{}obstacle"{} with center and radius \begin{DoxyFields}{Class Members}
+\mbox{\Hypertarget{pathfinding_8hpp_a2bb51b9cdd48e47b571660fb7321f5ef}\label{pathfinding_8hpp_a2bb51b9cdd48e47b571660fb7321f5ef}} 
+\mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}}&
+p&
+position of circle center \\
+\hline
+
+\mbox{\Hypertarget{pathfinding_8hpp_a40d7c1655a5616263647d0d0bbefda01}\label{pathfinding_8hpp_a40d7c1655a5616263647d0d0bbefda01}} 
+double&
+radius&
+radius of circle \\
+\hline
+
+\end{DoxyFields}
+\index{agent\_bids@{agent\_bids}}\label{structagent__bids}
+\Hypertarget{pathfinding_8hpp_structagent__bids}
+\doxysubsubsection{struct agent\+\_\+bids}
+information that an agent "{}bids"{} to a target including its best path, the distance of that path the agent (to erase() if this bid is accepted) \begin{DoxyFields}{Class Members}
+\mbox{\Hypertarget{pathfinding_8hpp_a1c6940953c3ddff1e63f2b931850ef65}\label{pathfinding_8hpp_a1c6940953c3ddff1e63f2b931850ef65}} 
+\mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}}&
+agent&
+position of the agent \\
+\hline
+
+\mbox{\Hypertarget{pathfinding_8hpp_abbdc5c6caddbd7c6abad26a33592f4bb}\label{pathfinding_8hpp_abbdc5c6caddbd7c6abad26a33592f4bb}} 
+int&
+agent\_vect\_idx&
+agent position in vector (to erase if selected) \\
+\hline
+
+\mbox{\Hypertarget{pathfinding_8hpp_a1791c5389883544ae147e1eef84fd410}\label{pathfinding_8hpp_a1791c5389883544ae147e1eef84fd410}} 
+double&
+distance&
+the distance of this agent\textquotesingle{}s path \\
+\hline
+
+\mbox{\Hypertarget{pathfinding_8hpp_a81f006f0ee9fbc30ec8536f0cf6269e4}\label{pathfinding_8hpp_a81f006f0ee9fbc30ec8536f0cf6269e4}} 
+\mbox{\hyperlink{pathfinding_8hpp_a86f22d25652f7746feb05ac4b340086b}{Line}}&
+path&
+the path this agent bids \\
+\hline
+
+\end{DoxyFields}
+\index{pathfind\_result@{pathfind\_result}}\label{structpathfind__result}
+\Hypertarget{pathfinding_8hpp_structpathfind__result}
+\doxysubsubsection{struct pathfind\+\_\+result}
+Struct that holds a selected \{agent, target\} pairing and the path that the winning agent bid for this target. \begin{DoxyFields}{Class Members}
+\mbox{\Hypertarget{pathfinding_8hpp_a5ede2f6f4b7ef87046aab91220f59a00}\label{pathfinding_8hpp_a5ede2f6f4b7ef87046aab91220f59a00}} 
+\mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}}&
+agent&
+position of selected agent \\
+\hline
+
+\mbox{\Hypertarget{pathfinding_8hpp_a656826054f6c89fc842dc0b5b87f9529}\label{pathfinding_8hpp_a656826054f6c89fc842dc0b5b87f9529}} 
+int&
+id&
+unique ID for reference \\
+\hline
+
+\mbox{\Hypertarget{pathfinding_8hpp_a70cae4058246db98a106de7f5bbd04b0}\label{pathfinding_8hpp_a70cae4058246db98a106de7f5bbd04b0}} 
+\mbox{\hyperlink{pathfinding_8hpp_a86f22d25652f7746feb05ac4b340086b}{Line}}&
+path&
+path that accepted agent bid \\
+\hline
+
+\mbox{\Hypertarget{pathfinding_8hpp_a885e669500fd77e76084b124c19872b2}\label{pathfinding_8hpp_a885e669500fd77e76084b124c19872b2}} 
+\mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}}&
+target&
+position of target \\
+\hline
+
+\end{DoxyFields}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{pathfinding_8hpp_a9c81f82b0246583088c9f1d56777f27f}\label{pathfinding_8hpp_a9c81f82b0246583088c9f1d56777f27f} 
+\index{pathfinding.hpp@{pathfinding.hpp}!is\_valid\_input\_params@{is\_valid\_input\_params}}
+\index{is\_valid\_input\_params@{is\_valid\_input\_params}!pathfinding.hpp@{pathfinding.hpp}}
+\doxysubsubsection{\texorpdfstring{is\_valid\_input\_params()}{is\_valid\_input\_params()}}
+{\footnotesize\ttfamily bool is\+\_\+valid\+\_\+input\+\_\+params (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{pathfinding_8hpp_a58e6558443cd17457f7b993813ae14a9}{Boundary}} \&}]{bounds,  }\item[{std\+::vector$<$ \mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}} $>$ \&}]{agents,  }\item[{std\+::vector$<$ \mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}} $>$ \&}]{targets,  }\item[{std\+::vector$<$ \mbox{\hyperlink{pathfinding_8hpp_structobstacle}{obstacle}} $>$ \&}]{obstacles }\end{DoxyParamCaption})}
+
+
+
+ensure that the input params are valid-\/ \doxylink{pathfinding_8hpp_aa80cd051b331fa691a87cd3607a36c68}{pathfind()} will call this and should not proceed if it fails 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bounds} & boundary Box struct \\
+\hline
+{\em agents} & provided vector of agents \\
+\hline
+{\em targets} & provided vector of targets \\
+\hline
+{\em obstacles} & provided vector of obstacles \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if all inputs are acceptable, else false 
+\end{DoxyReturn}
+\Hypertarget{pathfinding_8hpp_aa80cd051b331fa691a87cd3607a36c68}\label{pathfinding_8hpp_aa80cd051b331fa691a87cd3607a36c68} 
+\index{pathfinding.hpp@{pathfinding.hpp}!pathfind@{pathfind}}
+\index{pathfind@{pathfind}!pathfinding.hpp@{pathfinding.hpp}}
+\doxysubsubsection{\texorpdfstring{pathfind()}{pathfind()}}
+{\footnotesize\ttfamily std\+::vector$<$ \mbox{\hyperlink{pathfinding_8hpp_structpathfind__result}{pathfind\+\_\+result}} $>$ pathfind (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{pathfinding_8hpp_a58e6558443cd17457f7b993813ae14a9}{Boundary}} \&}]{bounds,  }\item[{std\+::vector$<$ \mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}} $>$ \&}]{agents,  }\item[{std\+::vector$<$ \mbox{\hyperlink{pathfinding_8hpp_a4495ec0c90a0251fb2ac85a7f673f37e}{Point}} $>$ \&}]{targets,  }\item[{std\+::vector$<$ \mbox{\hyperlink{pathfinding_8hpp_structobstacle}{obstacle}} $>$ \&}]{obstacles }\end{DoxyParamCaption})}
+
+
+
+given boundaries, some agents, and some targets, select paths from agent to target Throws std\+::runtime\+\_\+error if a target is unreachable by any agent Throws std\+::invalid\+\_\+argument if there is a problem with the input parameters 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bounds} & boundary Box struct \\
+\hline
+{\em agents} & vector of all agents (represented by Point) to bid upon targets \\
+\hline
+{\em targets} & vector of all targets (represented by Point) to be bid upon \\
+\hline
+{\em obstacles} & vector of all circular obstacles \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+vector of pathfind\+\_\+results, algorithm is complete 
+\end{DoxyReturn}
+\Hypertarget{pathfinding_8hpp_acf010059b1ecd22fe889979dda92d361}\label{pathfinding_8hpp_acf010059b1ecd22fe889979dda92d361} 
+\index{pathfinding.hpp@{pathfinding.hpp}!print\_result@{print\_result}}
+\index{print\_result@{print\_result}!pathfinding.hpp@{pathfinding.hpp}}
+\doxysubsubsection{\texorpdfstring{print\_result()}{print\_result()}}
+{\footnotesize\ttfamily void print\+\_\+result (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{pathfinding_8hpp_a58e6558443cd17457f7b993813ae14a9}{Boundary}} \&}]{bounds,  }\item[{std\+::vector$<$ \mbox{\hyperlink{pathfinding_8hpp_structobstacle}{obstacle}} $>$ \&}]{obstacles,  }\item[{std\+::vector$<$ \mbox{\hyperlink{pathfinding_8hpp_structpathfind__result}{pathfind\+\_\+result}} $>$ \&}]{results }\end{DoxyParamCaption})}
+
+
+
+Print the entire state to STDOUT, can be piped into a \texorpdfstring{$\ast$}{*}.csv file and rendered by render\+\_\+result.\+py. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bounds} & Outer boundary Box \\
+\hline
+{\em obstacles} & Vector of obstacles \\
+\hline
+{\em results} & Vector of pathfind\+\_\+results \\
+\hline
+\end{DoxyParams}
