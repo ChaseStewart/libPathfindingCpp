@@ -1,4 +1,6 @@
 # libPathfindingCpp
+[![Documentation](https://github.com/adafruit/ci-arduino/blob/master/assets/doxygen_badge.svg)](https://chasestewart.github.io/libPathfindingCpp/)
+
 A C++ path planner providing an algorithm to assign agents to targets.
 
 See [Test Results](#test-results) to get a sense of what this does.
