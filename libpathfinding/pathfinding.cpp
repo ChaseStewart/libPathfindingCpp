@@ -407,7 +407,7 @@ bool is_valid_input_params(Boundary &bounds, vector<Point> &agents, vector<Point
       }
    }
 
-   /* ensure no obstacles bifurcate the box */
+   /* ensure no obstacles bifurcate or intersect the box */
    for (auto obs : obstacles)
    {
       MultiPolygon mp;
@@ -416,7 +416,7 @@ bool is_valid_input_params(Boundary &bounds, vector<Point> &agents, vector<Point
 
       if (bg::num_geometries(mp) > 1)
       {
-         cerr << "ERROR: Obstacle bifurcates the boundary" << endl;
+         cerr << "ERROR: Obstacle bifurcates or intersects the boundary" << endl;
          return false;
       }
    }
