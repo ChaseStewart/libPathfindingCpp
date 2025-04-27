@@ -1,9 +1,10 @@
 /**
- * @file pathfinding.hpp
+ * @file pathfinding.cpp
  * @author Chase E. Stewart
  * @date 4/24/2025
  * @brief Library source for libpathfinding
  */
+
 #include <iostream>
 #include <vector>
 #include <string>
@@ -17,14 +18,15 @@
 using namespace std;
 namespace bg = boost::geometry;
 
-const int points_per_circle = 16;        // configurable number of points around circles
-const double line_buffer_distance = 0.1; // configurable relatively small "stroke-width" to turn lines to polygons
 
-const float min_keepout_buffer = 0.05; // scalar for get_obstacle_buffer_size()
+// tunables
+const int points_per_circle = 16; ///< configurable number of points around circles
+const double line_buffer_distance = 0.1; ///< configurable relatively small "stroke-width" to turn lines to polygons
+const float min_keepout_buffer = 0.05; ///< scalar for get_obstacle_buffer_size()
 
 // static variable, ensures n-many wraps around obstacles don't take same path
 // each subsequent call to get_obstacle_avoid_path will have additional keepout
-static int buffer_offset = 1;
+static int buffer_offset = 1; ///< incrementing value to increase subsequent keepout around obstacles
 
 /* Resolving paths */
 static void swap_agents(vector<pathfind_result> &pr, int idx_1, int idx_2);
@@ -43,7 +45,10 @@ static MultiPolygon circle_from_obstacle(obstacle o, double extra_buffer);
 static double get_obstacle_buffer_size(void);
 
 
-
+/**
+ * @brief the pathfind() function is the core offering of this libpathfinding library
+ * see pathfinding.h and the README.md for details
+ */
 vector<pathfind_result> pathfind(Boundary &bounds, vector<Point> &agents, vector<Point> &targets, vector<obstacle> &obstacles)
 {
    vector<pathfind_result> final_results; // results vector
@@ -51,7 +56,7 @@ vector<pathfind_result> pathfind(Boundary &bounds, vector<Point> &agents, vector
    // just print error and exit if inputs not valid
    if (!is_valid_input_params(bounds, agents, targets, obstacles))
    {
-      exit(1);
+      throw std::invalid_argument("Invalid input parameters");
    }
 
    // iterate over each target, find the closest agent to assign to each target
@@ -89,7 +94,7 @@ vector<pathfind_result> pathfind(Boundary &bounds, vector<Point> &agents, vector
             agent_bids bid = {std::distance(agents.begin(), it), *it, straight_path, bg::length(straight_path)};
             bids.push_back(bid);
          }
-         // hard case, need curved object-avoiding path
+         // this is the hard case, need curved object-avoiding path via convex_hull
          else if (!intersecting.empty())
          {
             cout << "\t\tAgent_" << agent_id << " bids convex hull to target" << endl;
@@ -106,9 +111,9 @@ vector<pathfind_result> pathfind(Boundary &bounds, vector<Point> &agents, vector
             agent_bids bid = {agent_id, *it, curved_path, bg::length(curved_path)};
             bids.push_back(bid);
          }
+         // Should not be possible
          else
          {
-            // Should not be possible
             throw runtime_error("Agent or target is out of bounds, initial checks insufficient");
          }
       }
@@ -179,10 +184,17 @@ vector<pathfind_result> pathfind(Boundary &bounds, vector<Point> &agents, vector
          }
       }
    }
-
    return final_results;
 }
 
+/**
+ * @brief Create the curved line path that avoids obstacles for a single agent
+ * Steps are: create union of straight_path and obstacles, get convex hull of union,
+ * create resulting path from a subset of convex_hull points and start/end
+ * @param straight_path a two-point line with {agent, target}
+ * @param obstacles vector of all obstacles
+ * @param is_clockwise true to reverse the convex_hull output before iterating
+ */
 static Line get_obstacle_avoid_path(Line straight_path, vector<obstacle> &obstacles, bool is_clockwise)
 {
    boost::geometry::strategy::buffer::distance_symmetric<double> distance_strategy(line_buffer_distance);
@@ -252,6 +264,15 @@ static Line get_obstacle_avoid_path(Line straight_path, vector<obstacle> &obstac
    return retval;
 }
 
+/**
+ * @brief given a convex hull, agent, and target, find subset of points from agent to target
+ * this involves finding closest point in convex hull to agent and target, and taking a subvector
+ * @param agent the Point of the agent, first point in straight_path
+ * @param target the Point of the final target, second and final point in straight_path
+ * @param convex_hull a closed-shape convex hull that goes around but doesn't touch agent/target
+ * @param is_clockwise true to reverse convex_hull before iterating
+ * @return linestring with the relevant portion of provided convex_hull for pathfinding
+ */
 static Line find_convex_hull_subset(Point agent, Point target, Line convex_hull, bool is_clockwise)
 {
    double start_distance;
@@ -262,13 +283,14 @@ static Line find_convex_hull_subset(Point agent, Point target, Line convex_hull,
    size_t end_idx;
    Line result;
 
+   // this handles clockwise/counterclockwise iteration
    if (!is_clockwise)
    {
       bg::reverse(convex_hull);
    }
 
-   //cout << "\t\t\t" << LP_PRINT_GEOM(convex_hull) << endl;
-
+   // iterate around whole closed shape, checking each points distances
+   // to agent and to target, keep a running tally of closest point to each
    for (auto it = convex_hull.begin(); it != convex_hull.end(); ++it)
    {
       start_distance = bg::distance(*it, agent);
@@ -284,7 +306,8 @@ static Line find_convex_hull_subset(Point agent, Point target, Line convex_hull,
          end_idx = std::distance(convex_hull.begin(), it);
       }
    }
-   //cout << "\t\t\tconvex_hull.len=" << convex_hull.size() << ", convex_hull.begin=" << start_idx << ", convex_hull.end=" << end_idx << endl;
+   // now that we have closest points, return subset of closed shape from min(start,end) to max(start,end) 
+   // TODO this is suboptimal and it should be possible to reason out this min/max/ reverse issue
    result.assign(convex_hull.begin() + min(start_idx, end_idx), convex_hull.begin() + max(start_idx, end_idx));
    return result;
 }
