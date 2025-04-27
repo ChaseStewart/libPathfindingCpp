@@ -81,3 +81,12 @@ The high level algorithm is this
 9. repeat steps 6 - 8 until we get through combinations without an intersection- if this goes indefinitely, eventually algorithm will raise exception
 10. return list of paths
 
+
+### Test\_1 Results
+![Screenshot](/results/Test1_output.png)
+### Test\_2 Results
+![Screenshot](/results/Test2_output.png)
+### Test\_3 Results
+![Screenshot](/results/Test3_output.png)
+### Test\_4 Results
+![Screenshot](/results/Test4_output.png)
