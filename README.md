@@ -27,9 +27,10 @@ From an absolutely unmodified version of WSL Ubuntu-24.04
 ```shell
 git clone git@github.com:ChaseStewart/libPathfindingCpp.git
 ```
-* Then, install the boost library
+* Then, install the boost library and cmake
 ```shell
 sudo apt-get install libboost-all-dev
+sudo apt-get install cmake
 ```
 * Install python and its needed libraries, if you haven't
 ```shell
@@ -42,11 +43,16 @@ Now you will be ready to compile and run the program
 ### Installation and Running
 Follow these steps to exercise the library example
 
-* From `libPathfindingCpp/`, call `make`
+### Running Main program
+* From `libPathfindingCpp/`, call `cmake -S . -B build; cmake --build build`
 * [Optional] Run `./main` and observe outputs
 * Run `./main > results.csv`
 * run `./render_results.py` **NOTE: your terminal must be capable of popping up windows- my WSL from Windows 11 can do this**
   + in case you have trouble with this, I have provided captures of the test results. These should be deterministic
+
+### Running unittests
+* From `libPathfindingCpp/`, call `cmake -S . -B build; cmake --build build`
+* run ./test\_pathfinding
 
 ## Design
 ### Goals
