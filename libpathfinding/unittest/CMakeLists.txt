@@ -18,7 +18,8 @@ find_package(GTest REQUIRED)
 include_directories(${CMAKE_SOURCE_DIR})
 add_executable(
   test_pathfinding
-  test_pathfinding.cpp
+  test_pathfinding_inputs.cpp
+  test_pathfinding_algorithm.cpp
 )
 
 target_link_libraries(

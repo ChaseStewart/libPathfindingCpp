@@ -6,7 +6,7 @@
 using namespace std;
 
 namespace {
-  class PathfindingTest : public ::testing::Test {
+  class PathfindingInputsTest : public ::testing::Test {
 
   protected:
     vector<pathfind_result> results;
@@ -39,7 +39,7 @@ namespace {
   };
 
   /* Tests to validate boundary inputs */
-  TEST_F(PathfindingTest, ValidateInputBounds) {
+  TEST_F(PathfindingInputsTest, ValidateInputBounds) {
     /* Test blank input data (should fail on boundary box validation) */
     cout << "\tTEST_1: test empty bounds" << endl;
     EXPECT_FALSE(is_valid_input_params(bounds, agents, targets, obstacles));
@@ -60,7 +60,7 @@ namespace {
   }
 
   /* Tests to validate agent inputs */
-  TEST_F(PathfindingTest, ValidateInputAgents) {
+  TEST_F(PathfindingInputsTest, ValidateInputAgents) {
 
       bounds = {Point(0.0, 0.0), Point(10.0, 10.0)};
 
@@ -120,7 +120,7 @@ namespace {
     }
 
   /* Tests to validate target inputs */
-  TEST_F(PathfindingTest, ValidateInputTargets) {
+  TEST_F(PathfindingInputsTest, ValidateInputTargets) {
 
     bounds = {Point(0.0, 0.0), Point(10.0, 10.0)};
 
