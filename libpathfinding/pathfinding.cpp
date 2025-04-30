@@ -316,8 +316,6 @@ static double get_obstacle_buffer_size(void)
  */
 static MultiPolygon circle_from_obstacle(obstacle o, double extra_buffer = 0)
 {
-   const int points_per_circle = 16; // configurable num points around circle
-
    /**
     * We use the concept of a buffer around a point to create our circle
     * boost::geometry strategies are effectively options about how we will generate our circle
@@ -539,7 +537,7 @@ static bool is_path_in_bounds(Line path, Boundary bounds)
  */
 static bool is_point_in_bounds(Point p, Boundary bounds)
 {
-   return bg::covered_by(p, bounds);
+   return bg::within(p, bounds);
 }
 
 /**
