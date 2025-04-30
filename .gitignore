@@ -1,6 +1,8 @@
 # Custom
 results.csv
+test_pathfinding
 main
+build/
 
 # Prerequisites
 *.d
@@ -17,6 +19,7 @@ main
 
 # Compiled Dynamic libraries
 *.so
+*.so.*
 *.dylib
 *.dll
 
@@ -34,3 +37,5 @@ main
 *.exe
 *.out
 *.app
+
+.vscode/
