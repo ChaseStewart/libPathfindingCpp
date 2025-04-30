@@ -347,6 +347,14 @@ static MultiPolygon circle_from_obstacle(obstacle o, double extra_buffer = 0)
  */
 bool is_valid_input_params(Boundary &bounds, vector<Point> &agents, vector<Point> &targets, vector<obstacle> &obstacles)
 {
+   /* Ensure bounds has some area */
+   if (bg::get<bg::min_corner, 0>(bounds) == bg::get<bg::max_corner, 0>(bounds) ||
+       bg::get<bg::min_corner, 1>(bounds) == bg::get<bg::max_corner, 1>(bounds))
+   {
+      cerr << "ERROR: Boundary box has either no height or width" << endl;
+      return false;
+   }
+
    /* ensure we don't exceed max number of agents */
    if (agents.size() > NUM_MAX_AGENTS)
    {

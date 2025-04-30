@@ -1,32 +1,59 @@
+#include <iostream>
 #include <vector>
 #include <gtest/gtest.h>
 #include "libpathfinding/pathfinding.hpp"
 
 using namespace std;
 
-// Demonstrate some basic assertions.
-TEST(test_pathfinding, BasicAssertions) {
-  // Expect two strings not to be equal.
-  EXPECT_STRNE("hello", "world");
-  // Expect equality.
-  EXPECT_EQ(7 * 6, 42);
-}
+namespace {
+  class PathfindingTest : public ::testing::Test {
 
-// Demonstrate some basic assertions.
-TEST(test_pathfinding, ValidateInputParams) {
-    
+  protected:
     vector<pathfind_result> results;
     vector<obstacle> obstacles;
     vector<Point> agents;
     vector<Point> targets;
     Boundary bounds;
+  
+    virtual void SetUp() {
+      results.clear();
+      obstacles.clear();
+      agents.clear();
+      targets.clear();
+      bounds.max_corner().set<0>(0.0);
+      bounds.max_corner().set<1>(0.0);
+      bounds.min_corner().set<0>(0.0);
+      bounds.min_corner().set<1>(0.0);
+    }
 
-    EXPECT_FALSE(is_valid_input_params(bounds, agents, targets, obstacles));
+    virtual void TearDown() {
+      results.clear();
+      obstacles.clear();
+      agents.clear();
+      targets.clear();
+      bounds.max_corner().set<0>(0.0);
+      bounds.max_corner().set<1>(0.0);
+      bounds.min_corner().set<0>(0.0);
+      bounds.min_corner().set<1>(0.0);
+    }
+  };
+  // Demonstrate some basic assertions.
+  TEST_F(PathfindingTest, ValidateInputParams) {    
 
-    bounds = {Point(0.0, 0.0), Point(10.0, 10.0)};
+      /* Test blank input data (should fail on boundary box validation) */
+      cout << "\tTEST_1: test empty data" << endl;
+      EXPECT_FALSE(is_valid_input_params(bounds, agents, targets, obstacles));
+      bounds = {Point(0.0, 0.0), Point(10.0, 10.0)};
 
-    // Expect two strings not to be equal.
-    EXPECT_STRNE("hello", "world");
-    // Expect equality.
-    EXPECT_EQ(7 * 6, 42);
+      /* Test too many agents */
+      agents.push_back(Point{0.0, 0.0});
+      agents.push_back(Point{1.0, 0.0});
+      agents.push_back(Point{2.0, 0.0});
+      agents.push_back(Point{3.0, 0.0});
+      agents.push_back(Point{4.0, 0.0});
+      cout << "\tTEST_2: test too many agents" << endl;
+      EXPECT_FALSE(is_valid_input_params(bounds, agents, targets, obstacles));
+  }
+
+
 }
