@@ -9,9 +9,13 @@ See [Test Results](#test-results) to get a sense of what this does.
 Chase E. Stewart
 
 ## Unittests
-**In order to ensure maximum compatibility and ease of demonstration, this `main` branch + README instruction set uses the Makefile system with gcc-c++ compiler**
-Unittests have been written within the [CMake Branch](https://github.com/ChaseStewart/libPathfindingCpp/tree/convert_Makefile_to_CMakeLists.txt)- please check out that branch
-and use its README instructions to run the unittests. The unittest executable `test\_pathfinding` covers `is_valid_input_params()` and some amount of `pathfind()` from the library-
+**In order to ensure maximum compatibility and ease of demonstration, this `main` branch + README instruction set uses the Makefile system with gcc-c++ compiler and does not include unittests.**
+
+The reason this Makefile-style branch does not include unittests is that it would need to include an unvetted GHA, a git submodule (not terrible but sort of clunky), or worst case a static copy of some amount of GoogleTest source
+in order for the unittests to run. I decided it would be preferable to convert the project to CMake to both show off that and also to use the elegant `FetchContent()` module. However, I did encounter difficulty with WSL/Ubuntu version when trying to run the CMake unittests on another computer, so rather than risk incompatibility for another user, I am offering both the more supported Makefile version and the CMake version with unittests developed. 
+
+Again, unittests have been written within the [CMake Branch](https://github.com/ChaseStewart/libPathfindingCpp/tree/convert_Makefile_to_CMakeLists.txt)- please check out that branch
+and use its README instructions to compile and run unittests for libpathfinding. The unittest executable `test\_pathfinding` covers `is_valid_input_params()` and some amount of `pathfind()` from the library-
 it is not extensive but is intended to be enough to demonstrate skill and design in setting up and using Google Test, CMakeLists.txt, and general unittest design principles. 
 
 ## Structure
