@@ -8,6 +8,12 @@ See [Test Results](#test-results) to get a sense of what this does.
 ## Author
 Chase E. Stewart
 
+## Unittests
+**In order to ensure maximum compatibility and ease of demonstration, this `main` branch + README instruction set uses the Makefile system with gcc-c++ compiler**
+Unittests have been written within the [CMake Branch](https://github.com/ChaseStewart/libPathfindingCpp/tree/convert_Makefile_to_CMakeLists.txt)- please check out that branch
+and use its README instructions to run the unittests. The unittest executable `test\_pathfinding` covers `is_valid_input_params()` and some amount of `pathfind()` from the library-
+it is not extensive but is intended to be enough to demonstrate skill and design in setting up and using Google Test, CMakeLists.txt, and general unittest design principles. 
+
 ## Structure
 library libpathfinding/ is a shared library that provides a wrapper over [boost::geometry](https://www.boost.org/doc/libs/1_85_0/libs/geometry/doc/html/index.html)
 so as to provide a desired algorithm for multi-quadcopter pathfinding.
